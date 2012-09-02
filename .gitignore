@@ -1,0 +1,9 @@
+*~
+*#*
+/dist
+.hpc
+*.hi
+*.core
+*.o
+TAGS
+

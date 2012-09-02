@@ -1,0 +1,37 @@
+Name:               postmark
+Version:            0.0.1
+License:            BSD3
+License-File:       LICENSE
+Author:             Mark Hibberd <mark@hibberd.id.au>
+Maintainer:         Mark Hibberd <mark@hibberd.id.au>
+Copyright:          (c) 2012 Mark Hibberd
+Synopsis:           Library for postmarkapp.com HTTP Api
+Category:           Network APIs
+Homepage:           https://github.com/ApiEngine/postmark
+Bug-reports:        https://github.com/ApiEngine/postmark/issues
+Cabal-Version:      >= 1.8
+Build-Type:         Simple
+Description:
+  postmark
+
+Source-Repository   head
+  Type:             git
+  Location:         https://github.com/ApiEngine/postmark.git
+
+Flag                small_base
+  Description:      Choose the new, split-up base package.
+
+Library
+  Build-Depends:
+                    base                            >= 3          && < 5
+
+  GHC-Options:
+                    -Wall -fno-warn-orphans
+
+  Hs-Source-Dirs:
+                    src
+
+  Exposed-Modules:
+                    Postmark
+                    Postmark.Core
+
