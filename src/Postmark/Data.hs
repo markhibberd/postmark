@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Postmark.Data where
 
-
 import Data.Aeson
 import Data.Map
 import Data.Text
@@ -53,6 +52,28 @@ https://api.postmarkapp.com/email/batch
 You just need to know if your data is valid. You can do that by passing the “POSTMARK_API_TEST” value as your server API token.
 -}
 
+type  BatchEmail = [Email]
+
+data Email = Email {
+    emailFrom :: [Text]
+  , emailTo :: [Text]
+  , emailCc :: [Text]
+  , emailBcc :: [Text]
+  , emailSubject :: Text
+  , emailTag :: Text
+  , emailHtml :: Maybe Text
+  , emailText :: Maybe Text
+  , emailReplyTo :: Text
+  , emailHeaders :: Map Text Text
+  , emailAttachments :: [Attachment]
+  }
+
+data Attachment = Attachment {
+    attachmentName :: Text
+  , attachmentContent :: Text
+  , attachmentContentType :: Text
+  }
+
 data PostmarkRequest =
     HttpPostmarkRequest Text
   | HttpsPostmarkRequest Text
@@ -81,33 +102,29 @@ data PostmarkError =
   | PostmarkJsonRequired
   | PostmarkTooManyMessages
   | PostmarkUnkownError Int
+  deriving Eq
 
+instance ToJSON Email where
+  toJSON v = object [
+      "From" .= emailFrom v
+    , "To" .= emailTo v
+    , "Cc" .= emailCc v
+    , "Bcc" .= emailBcc v
+    , "Subject" .= emailSubject v
+    , "Tag" .= emailTag v
+    , "HtmlBody" .= emailHtml v
+    , "TextBody" .= emailText v
+    , "ReplyTo" .= emailReplyTo v
+    , "Headers" .= emailHeaders v
+    , "Attachments" .= emailAttachments v
+    ]
 
-
-type  BatchEmail = [Email]
-
-data Email = Email {
-    emailFrom :: [Text]
-  , emailTo :: [Text]
-  , emailCc :: [Text]
-  , emailBcc :: [Text]
-  , emailSubject :: Text
-  , emailTag :: Text
-  , emailHtml :: Text
-  , emailText :: Text
-  , emailReplyTo :: Text
-  , emailHeaders :: Map Text Text
-  , emailAttachments :: [Attachment]
-  }
-
-data Attachment = Attachment {
-    attachmentName :: Text
-  , attachmentContent :: Text
-  , attachmentContentType :: Text
-  }
-
-postmarkTestToken :: Text
-postmarkTestToken = "POSTMARK_API_TEST"
+instance ToJSON Attachment where
+  toJSON v = object [
+      "Name" .= attachmentName v
+    , "Content" .= attachmentContent v
+    , "ContentType" .= attachmentContentType v
+    ]
 
 instance Show PostmarkError where
   show PostmarkBadApiToken = "Your request did not submit the correct API token in the X-Postmark-Server-Token header."
@@ -123,6 +140,9 @@ instance Show PostmarkError where
   show PostmarkJsonRequired = "Your HTTP request does not have the Accept and Content-Type headers set to application/json."
   show PostmarkTooManyMessages = "Your batched request contains more than 500 messages."
   show (PostmarkUnkownError code) = "An unexpected error code [" ++ show code ++ "] was retured from postmark."
+
+postmarkTestToken :: Text
+postmarkTestToken = "POSTMARK_API_TEST"
 
 toPostmarkError :: Int -> PostmarkError
 toPostmarkError 0 = PostmarkBadApiToken
