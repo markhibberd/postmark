@@ -1,10 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Postmark.Data where
 
-import Data.Text
+
 import Data.Aeson
 import Data.Map
-
+import Data.Text
+import Data.Time
 {-
 
 Authentication headers
@@ -57,9 +58,13 @@ data PostmarkRequest =
   | HttpsPostmarkRequest Text
 
 data PostmarkResponse =
-    SuccessPostmarkResponse
+    SuccessPostmarkResponse {
+        postmarkMessageId :: Text
+      , postmarkSubmittedAt :: UTCTime
+      , postmarkTo :: Text
+      }
   | UnauthorizedPostmarkResponse
-  | UnprocessiblePostmarkResponse
+  | UnprocessiblePostmarkResponse PostmarkError
   | ServerErrorPostmarkResponse
 
 data PostmarkError =
