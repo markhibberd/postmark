@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Postmark.Data where
 
 import Data.Text
@@ -61,34 +62,24 @@ data PostmarkResponse =
   | UnprocessiblePostmarkResponse
   | ServerErrorPostmarkResponse
 
-{-
-0 – Bad or missing API token
-    Your request did not submit the correct API token in the X-Postmark-Server-Token header.
-300 – Invalid email request
-    Validation failed for the email request JSON data that you provided.
-400 – Sender signature not found
-    You are trying to send email with a From address that does not have a sender signature.
-401 – Sender signature not confirmed
-    You are trying to send email with a From address that does not have a corresponding confirmed sender signature.
-402 – Invalid JSON
-    The JSON input you provided is syntactically incorrect.
-403 – Incompatible JSON
-    The JSON input you provided is syntactically correct, but still not the one we expect.
-405 – Not allowed to send
-    You ran out of credits.
-406 – Inactive recipient
-    You tried to send to a recipient that has been marked as inactive. Inactive recipients are ones that have generated a hard bounce or a spam complaint.
-407 – Bounce not found
-    You requested a bounce by ID, but we could not find an entry in our database.
-408 – Bounce query exception
-    You provided bad arguments as a bounces filter.
-409 – JSON required
-    Your HTTP request does not have the Accept and Content-Type headers set to application/json.
-410 – Too many batch messages
-    Your batched request contains more than 500 messages.
--}
+data PostmarkError =
+    PostmarkBadApiToken
+  | PostmarkInvalidEmail
+  | PostmarkSenderNotFound
+  | PostmarkSenderNotConfirmed
+  | PostmarkInvalidJson
+  | PostmarkIncompatibleJson
+  | PostmarkNotAllowed
+  | PostmarkInactive
+  | PostmarkBounceNotFound
+  | PostmarkBounceQueryException
+  | PostmarkJsonRequired
+  | PostmarkTooManyMessages
+  | PostmarkUnkownError Int
 
-type BatchEmail = [Email]
+
+
+type  BatchEmail = [Email]
 
 data Email = Email {
     emailFrom :: [Text]
@@ -110,6 +101,35 @@ data Attachment = Attachment {
   , attachmentContentType :: Text
   }
 
-
 postmarkTestToken :: Text
-postmarkTestToken = POSTMARK_API_TEST
+postmarkTestToken = "POSTMARK_API_TEST"
+
+instance Show PostmarkError where
+  show PostmarkBadApiToken = "Your request did not submit the correct API token in the X-Postmark-Server-Token header."
+  show PostmarkInvalidEmail = "Validation failed for the email request JSON data that you provided."
+  show PostmarkSenderNotFound = "You are trying to send email with a From address that does not have a sender signature."
+  show PostmarkSenderNotConfirmed = "You are trying to send email with a From address that does not have a corresponding confirmed sender signature."
+  show PostmarkInvalidJson = "The JSON input you provided is syntactically incorrect."
+  show PostmarkIncompatibleJson = "The JSON input you provided is syntactically correct, but still not the one we expect."
+  show PostmarkNotAllowed = "You ran out of credits."
+  show PostmarkInactive = "You tried to send to a recipient that has been marked as inactive. Inactive recipients are ones that have generated a hard bounce or a spam complaint."
+  show PostmarkBounceNotFound = "You requested a bounce by ID, but we could not find an entry in our database."
+  show PostmarkBounceQueryException = "You provided bad arguments as a bounces filter."
+  show PostmarkJsonRequired = "Your HTTP request does not have the Accept and Content-Type headers set to application/json."
+  show PostmarkTooManyMessages = "Your batched request contains more than 500 messages."
+  show (PostmarkUnkownError code) = "An unexpected error code [" ++ show code ++ "] was retured from postmark."
+
+toPostmarkError :: Int -> PostmarkError
+toPostmarkError 0 = PostmarkBadApiToken
+toPostmarkError 300 = PostmarkInvalidEmail
+toPostmarkError 400 = PostmarkSenderNotFound
+toPostmarkError 401 = PostmarkSenderNotConfirmed
+toPostmarkError 402 = PostmarkInvalidJson
+toPostmarkError 403 = PostmarkIncompatibleJson
+toPostmarkError 405 = PostmarkNotAllowed
+toPostmarkError 406 = PostmarkInactive
+toPostmarkError 407 = PostmarkBounceNotFound
+toPostmarkError 408 = PostmarkBounceQueryException
+toPostmarkError 409 = PostmarkJsonRequired
+toPostmarkError 410 = PostmarkTooManyMessages
+toPostmarkError code = PostmarkUnkownError code
