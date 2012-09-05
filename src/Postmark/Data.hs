@@ -2,9 +2,11 @@
 module Postmark.Data where
 
 import Data.Aeson
-import Data.Map
-import Data.Text
+import Data.Map as M
+import Data.Maybe
+import Data.Text as T hiding (null)
 import Data.Time
+import Data.List as L
 {-
 
 Authentication headers
@@ -60,7 +62,7 @@ data Email = Email {
   , emailCc :: [Text]
   , emailBcc :: [Text]
   , emailSubject :: Text
-  , emailTag :: Text
+  , emailTag :: Maybe Text
   , emailHtml :: Maybe Text
   , emailText :: Maybe Text
   , emailReplyTo :: Text
@@ -105,19 +107,21 @@ data PostmarkError =
   deriving Eq
 
 instance ToJSON Email where
-  toJSON v = object [
+  toJSON v = object ([
       "From" .= emailFrom v
-    , "To" .= intercalate "," (emailTo v)
-    , "Cc" .= intercalate "," (emailCc v)
-    , "Bcc" .= intercalate "," (emailBcc v)
+    , "To" .= T.intercalate "," (emailTo v)
     , "Subject" .= emailSubject v
-    , "Tag" .= emailTag v
-    , "HtmlBody" .= emailHtml v
-    , "TextBody" .= emailText v
+
     , "ReplyTo" .= emailReplyTo v
-    , "Headers" .= emailHeaders v
     , "Attachments" .= emailAttachments v
-    ]
+    ] ++ (catMaybes [
+      fmap ("HtmlBody" .= ) (emailHtml v)
+    , fmap ("TextBody" .= ) (emailText v)
+    , fmap ("Tag" .=) (emailTag v)
+    , if M.null (emailHeaders v) then Nothing else Just ("Headers" .= emailHeaders v)
+    , if L.null (emailCc v) then Nothing else Just ("Cc" .= T.intercalate "," (emailCc v))
+    , if L.null (emailBcc v) then Nothing else Just ("Bcc" .= T.intercalate "," (emailBcc v))
+    ]))
 
 instance ToJSON Attachment where
   toJSON v = object [
