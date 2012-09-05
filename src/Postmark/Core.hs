@@ -1,25 +1,32 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Postmark.Core where
 
-{-
-postmarkrequest :: OutboundEmail -> ZZ (Request m)
-postmarkrequest email = liftIO $
-  parseUrl "http://api.postmarkapp.com/email" >>= \url ->
-    return $ url {
+import Data.ByteString.Char8 ()
+import Data.Aeson
+import Data.Text
+import Data.Text.Encoding
+
+import Network.HTTP.Conduit
+import Network.HTTP.Types (status200)
+
+import Postmark.Data
+
+-- FIX undodge
+sendEmail :: PostmarkRequest Email -> IO PostmarkResponse
+sendEmail req =
+    parseUrl (unpack $ toUrl req "email") >>= \url ->
+    return (url {
         method = "POST"
       , requestHeaders = [
           ("Accept", "application/json")
         , ("Content-Type", "application/json")
-        , ("X-Postmark-Server-Token", "95594c9d-fbc4-4599-b7bc-2f9cbb8f53c7")
+        , ("X-Postmark-Server-Token", encodeUtf8 $  postmarkToken req)
       ]
-      , requestBody =  RequestBodyLBS . encode . toJSON $ email
-    }
+      , requestBody =  RequestBodyLBS . encode . toJSON $ postmarkEmail req
+    }) >>= \r ->  withManager (httpLbs r) >>= \res ->
+    case res of
+      _ -> undefined --FIX handle each response code and parse into datatypes
 
-postmark :: OutboundEmail -> ZZ ()
-postmark email =
-  postmarkrequest email >>= \req ->
-  liftIO (withManager (httpLbs req)) >>= \res ->
-  unless (responseStatus res == status200)
-    (zlog ("Couldn't send email: " <> (pack . show $ res)) >> oops "Couldn't send email")
--}
+
 bletch :: Int -> Int
 bletch x = x

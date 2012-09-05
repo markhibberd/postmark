@@ -25,7 +25,10 @@ Library
   Build-Depends:
                     base                            >= 3          && < 5
                     , aeson                         >= 0.6
+                    , bytestring                    >= 0.9
                     , containers                    >= 0.4
+                    , http-conduit                  >= 1.4
+                    , http-types                    >= 0.6
                     , time                          >= 1.2
                     , text                          >= 0.11
 

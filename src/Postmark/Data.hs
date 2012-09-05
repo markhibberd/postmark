@@ -4,6 +4,7 @@ module Postmark.Data where
 import Data.Aeson
 import Data.Map as M
 import Data.Maybe
+import Data.Monoid (mappend)
 import Data.Text as T hiding (null)
 import Data.Time
 import Data.List as L
@@ -76,9 +77,9 @@ data Attachment = Attachment {
   , attachmentContentType :: Text
   }
 
-data PostmarkRequest =
-    HttpPostmarkRequest Text
-  | HttpsPostmarkRequest Text
+data PostmarkRequest a =
+    HttpPostmarkRequest Text a
+  | HttpsPostmarkRequest Text a
 
 data PostmarkResponse =
     SuccessPostmarkResponse {
@@ -162,6 +163,22 @@ toPostmarkError 409 = PostmarkJsonRequired
 toPostmarkError 410 = PostmarkTooManyMessages
 toPostmarkError code = PostmarkUnkownError code
 
+toBaseUrl :: PostmarkRequest a -> Text
+toBaseUrl (HttpPostmarkRequest _ _) = "http://api.postmarkapp.com/"
+toBaseUrl (HttpsPostmarkRequest _ _) = "https://api.postmarkapp.com/"
+
+toUrl :: PostmarkRequest a -> Text -> Text
+toUrl req suffix = (toBaseUrl req) `mappend` suffix
+
+postmarkToken :: PostmarkRequest a -> Text
+postmarkToken (HttpPostmarkRequest t _) = t
+postmarkToken (HttpsPostmarkRequest t _) = t
+
+postmarkEmail :: PostmarkRequest a -> a
+postmarkEmail (HttpPostmarkRequest _ e) = e
+postmarkEmail (HttpsPostmarkRequest _ e) = e
+
+
 ojson :: ToJSON a => Text -> Maybe a -> Maybe (Text, Value)
 ojson k = fmap (k .=)
 
@@ -170,3 +187,5 @@ oljson k vs f = if L.null vs then Nothing else Just (k .= f vs)
 
 omjson :: (ToJSON a) => Text -> Map Text a -> Maybe (Text, Value)
 omjson k vs = if M.null vs then Nothing else Just (k .= vs)
+
+
