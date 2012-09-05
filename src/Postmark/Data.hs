@@ -111,16 +111,15 @@ instance ToJSON Email where
       "From" .= emailFrom v
     , "To" .= T.intercalate "," (emailTo v)
     , "Subject" .= emailSubject v
-
     , "ReplyTo" .= emailReplyTo v
-    , "Attachments" .= emailAttachments v
     ] ++ (catMaybes [
-      fmap ("HtmlBody" .= ) (emailHtml v)
-    , fmap ("TextBody" .= ) (emailText v)
-    , fmap ("Tag" .=) (emailTag v)
-    , if M.null (emailHeaders v) then Nothing else Just ("Headers" .= emailHeaders v)
-    , if L.null (emailCc v) then Nothing else Just ("Cc" .= T.intercalate "," (emailCc v))
-    , if L.null (emailBcc v) then Nothing else Just ("Bcc" .= T.intercalate "," (emailBcc v))
+      ojson "HtmlBody" (emailHtml v)
+    , ojson "TextBody" (emailText v)
+    , ojson "Tag" (emailTag v)
+    , oljson "Cc" (emailCc v) (T.intercalate ",")
+    , oljson "Bcc" (emailBcc v) (T.intercalate ",")
+    , omjson "Headers" (emailHeaders v)
+    , oljson "Attachments" (emailAttachments v) id
     ]))
 
 instance ToJSON Attachment where
@@ -162,3 +161,12 @@ toPostmarkError 408 = PostmarkBounceQueryException
 toPostmarkError 409 = PostmarkJsonRequired
 toPostmarkError 410 = PostmarkTooManyMessages
 toPostmarkError code = PostmarkUnkownError code
+
+ojson :: ToJSON a => Text -> Maybe a -> Maybe (Text, Value)
+ojson k = fmap (k .=)
+
+oljson :: ToJSON b => Text -> [a] -> ([a] -> b) -> Maybe (Text, Value)
+oljson k vs f = if L.null vs then Nothing else Just (k .= f vs)
+
+omjson :: (ToJSON a) => Text -> Map Text a -> Maybe (Text, Value)
+omjson k vs = if M.null vs then Nothing else Just (k .= vs)
