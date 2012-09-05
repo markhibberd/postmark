@@ -107,9 +107,9 @@ data PostmarkError =
 instance ToJSON Email where
   toJSON v = object [
       "From" .= emailFrom v
-    , "To" .= emailTo v
-    , "Cc" .= emailCc v
-    , "Bcc" .= emailBcc v
+    , "To" .= intercalate "," (emailTo v)
+    , "Cc" .= intercalate "," (emailCc v)
+    , "Bcc" .= intercalate "," (emailBcc v)
     , "Subject" .= emailSubject v
     , "Tag" .= emailTag v
     , "HtmlBody" .= emailHtml v
