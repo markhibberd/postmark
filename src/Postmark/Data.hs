@@ -43,7 +43,8 @@ data PostmarkResponse =
       }
   | UnauthorizedPostmarkResponse
   | UnprocessiblePostmarkResponse PostmarkError
-  | ServerErrorPostmarkResponse
+  | ServerErrorPostmarkResponse Text
+  | UnexpectedResponse Int Text
 
 data PostmarkError =
     PostmarkBadApiToken

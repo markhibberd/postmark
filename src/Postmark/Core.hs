@@ -2,13 +2,16 @@
 module Postmark.Core (sendEmail) where
 
 
-import Data.ByteString.Lazy.Char8 hiding (unpack)
+--import Data.ByteString.Char8 (encodeUtf8, decodeUtf8)
+import Data.ByteString.Lazy.Char8 (ByteString)
 import Data.Aeson
 import Data.Text
 import Data.Text.Encoding
+import qualified Data.Text.Lazy as LT
+import qualified Data.Text.Lazy.Encoding as LE
 
 import Network.HTTP.Conduit
-import Network.HTTP.Types (status200)
+import Network.HTTP.Types
 
 import Postmark.Data
 
@@ -27,5 +30,11 @@ sendEmail req =
     }) >>= \r ->  withManager (httpLbs r) >>= return . responder
 
 responder :: Response ByteString -> PostmarkResponse
-responder res = undefined
---FIX handle each response code and parse into datatypes
+responder (Response status _ _ body) =
+  let b = LT.toStrict . LE.decodeUtf8 $ body
+   in case status of
+    status200 -> undefined -- FIX parse out success case
+    status401 -> UnauthorizedPostmarkResponse
+    status422 -> undefined -- FIX parse out client error
+    status500 -> ServerErrorPostmarkResponse b
+    (Status c _) -> UnexpectedResponse c b
