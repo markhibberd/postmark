@@ -8,52 +8,6 @@ import Data.Monoid (mappend)
 import Data.Text as T hiding (null)
 import Data.Time
 import Data.List as L
-{-
-
-Authentication headers
-X-Postmark-Server-Token: your-api-key-here
-
-https://api.postmarkapp.com/email
-
-Message format
-{
-  "From" : "sender@example.com",
-  "To" : "receiver@example.com",
-  "Cc" : "copied@example.com",
-  "Bcc": "blank-copied@example.com",
-  "Subject" : "Test",
-  "Tag" : "Invitation",
-  "HtmlBody" : "<b>Hello</b>",
-  "TextBody" : "Hello",
-  "ReplyTo" : "reply@example.com",
-  "Headers" : [{ "Name" : "CUSTOM-HEADER", "Value" : "value" }]
-}
-
-  "Attachments": [
-    {
-      "Name": "readme.txt",
-      "Content": "dGVzdCBjb250ZW50",
-      "ContentType": "text/plain"
-    },
-    {
-      "Name": "report.pdf",
-      "Content": "dGVzdCBjb250ZW50",
-      "ContentType": "application/octet-stream"
-    }
-
-
-{
-  "ErrorCode" : 0,
-  "Message" : "OK",
-  "MessageID" : "b7bc2f4a-e38e-4336-af7d-e6c392c2f817",
-  "SubmittedAt" : "2010-11-26T12:01:05.1794748-05:00",
-  "To" : "receiver@example.com"
-}
-
-https://api.postmarkapp.com/email/batch
-
-You just need to know if your data is valid. You can do that by passing the “POSTMARK_API_TEST” value as your server API token.
--}
 
 type  BatchEmail = [Email]
 
