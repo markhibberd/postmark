@@ -37,12 +37,18 @@ responder (Response status _ _ body) =
    in case status of
     (Status 200 _) -> undefined -- FIX parse out success case
     (Status 401 _) -> UnauthorizedPostmarkResponse
-    (Status 422 _) -> case parseOnly json (B.concat . BL.toChunks $ body) of
-      Left _ -> undefined -- FIX handle malformed json
-      Right j -> case fromJSON j of
-        (Error _) -> undefined -- FIX handle non-spec json
-        (Success (PostmarkResponseErrorData code message)) ->
-          undefined -- FIX finish parsing out error code
---          UnprocessiblePostmarkResponse (toPostmarkError code) message
+    (Status 422 _) -> case parseJson body of
+      Left (Left msg) -> undefined -- FIX handle malformed json
+      Left (Right msg) -> undefined -- FIX handle non-spec json
+      Right (PostmarkResponseErrorData code message) -> undefined -- FIX handle valid/invalid code
     (Status 500 _) -> ServerErrorPostmarkResponse b
     (Status c _) -> UnexpectedResponse c b
+
+parseJson :: FromJSON a => BL.ByteString -> Either (Either Text Text) a
+parseJson bs =
+  let strict = B.concat . BL.toChunks $ bs
+   in case parseOnly json strict of
+      Left msg -> Left (Left . pack $ msg)
+      Right j -> case fromJSON j of
+        (Error msg') -> Left (Right . pack $ msg')
+        (Success a) -> Right a
