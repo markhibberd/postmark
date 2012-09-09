@@ -38,23 +38,23 @@ data PostmarkRequest a =
   | HttpsPostmarkRequest Text a
 
 data PostmarkResponseSuccessData =
-    PostmarkResponseSuccessData Text Text Text Text Text
+    PostmarkResponseSuccessData Text Text Text
 
 data PostmarkResponseErrorData =
     PostmarkResponseErrorData Text Text
 
 data PostmarkResponse =
-    SuccessPostmarkResponse {
+    PostmarkResponseSuccess {
         postmarkMessageId :: Text
       , postmarkSubmittedAt :: UTCTime
       , postmarkTo :: Text
       }
-  | UnauthorizedPostmarkResponse
-  | UnprocessiblePostmarkResponse PostmarkError Text
-  | ServerErrorPostmarkResponse Text
-  | UnexpectedResponse Int Text
-  | PostmarkJsonSyntaxError Int Text Text
-  | PostmarkJsonFormatError Int Text Text
+  | PostmarkResponseUnauthorized
+  | PostmarkResponseUnprocessible PostmarkError Text
+  | PostmarkResponseServerError Text
+  | PostmarkResponseInvalidResponseCode Int Text
+  | PostmarkResponseJsonSyntaxError Int Text Text
+  | PostmarkResponseJsonFormatError Int Text Text
 
 data PostmarkError =
     PostmarkBadApiToken
@@ -97,9 +97,7 @@ instance ToJSON Attachment where
 
 instance FromJSON PostmarkResponseSuccessData where
   parseJSON (Object o) = PostmarkResponseSuccessData
-    <$> o .: "ErrorCode"
-    <*> o .: "Message"
-    <*> o .: "MessageId"
+    <$> o .: "MessageId"
     <*> o .: "SubmittedAt"
     <*> o .: "To"
   parseJSON _ = fail "Invalid Postmark Success Response"

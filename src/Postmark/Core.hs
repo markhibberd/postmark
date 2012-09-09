@@ -35,18 +35,19 @@ responder :: Response BL.ByteString -> PostmarkResponse
 responder (Response status _ _ body) =
   let b = LT.toStrict . LE.decodeUtf8 $ body
    in case status of
-    (Status 200 _) -> withJson body (\(PostmarkResponseSuccessData _ _ ident at to) -> SuccessPostmarkResponse ident undefined to)
-    (Status 401 _) -> UnauthorizedPostmarkResponse
-    (Status 422 _) -> withJson body (\(PostmarkResponseErrorData code message) -> UnprocessiblePostmarkResponse (toPostmarkError code) message)
-    (Status 500 _) -> ServerErrorPostmarkResponse b
-    (Status c _) -> UnexpectedResponse c b
+    -- FIX format date
+    (Status 200 _) -> withJson body (\(PostmarkResponseSuccessData ident at to) -> PostmarkResponseSuccess ident undefined to)
+    (Status 401 _) -> PostmarkResponseUnauthorized
+    (Status 422 _) -> withJson body (\(PostmarkResponseErrorData code message) -> PostmarkResponseUnprocessible (toPostmarkError code) message)
+    (Status 500 _) -> PostmarkResponseServerError b
+    (Status c _) -> PostmarkResponseInvalidResponseCode c b
 
 withJson :: FromJSON a => BL.ByteString -> (a -> PostmarkResponse) -> PostmarkResponse
 withJson bs f =
   let bt = LT.toStrict . LE.decodeUtf8 $ bs
   in case parseJson bs of
-    Left (Left msg) -> PostmarkJsonSyntaxError 200 msg bt
-    Left (Right msg) -> PostmarkJsonFormatError 200 msg bt
+    Left (Left msg) -> PostmarkResponseJsonSyntaxError 200 msg bt
+    Left (Right msg) -> PostmarkResponseJsonFormatError 200 msg bt
     Right a -> f a
 
 parseJson :: FromJSON a => BL.ByteString -> Either (Either Text Text) a
