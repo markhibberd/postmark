@@ -1,6 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Postmark.Data where
 
+import Control.Applicative
+
 import Data.Aeson
 import Data.Map as M
 import Data.Maybe
@@ -35,6 +37,12 @@ data PostmarkRequest a =
     HttpPostmarkRequest Text a
   | HttpsPostmarkRequest Text a
 
+data PostmarkResponseSuccessData =
+    PostmarkResponseSuccessData Text Text Text Text Text
+
+data PostmarkResponseErrorData =
+    PostmarkResponseErrorData Text Text
+
 data PostmarkResponse =
     SuccessPostmarkResponse {
         postmarkMessageId :: Text
@@ -42,7 +50,7 @@ data PostmarkResponse =
       , postmarkTo :: Text
       }
   | UnauthorizedPostmarkResponse
-  | UnprocessiblePostmarkResponse PostmarkError
+  | UnprocessiblePostmarkResponse PostmarkError Text
   | ServerErrorPostmarkResponse Text
   | UnexpectedResponse Int Text
 
@@ -84,6 +92,22 @@ instance ToJSON Attachment where
     , "Content" .= attachmentContent v
     , "ContentType" .= attachmentContentType v
     ]
+
+instance FromJSON PostmarkResponseSuccessData where
+  parseJSON (Object o) = PostmarkResponseSuccessData
+    <$> o .: "ErrorCode"
+    <*> o .: "Message"
+    <*> o .: "MessageId"
+    <*> o .: "SubmittedAt"
+    <*> o .: "To"
+  parseJSON _ = fail "Invalid Postmark Success Response"
+
+instance FromJSON PostmarkResponseErrorData where
+  parseJSON (Object o) = PostmarkResponseErrorData
+    <$> o .: "ErrorCode"
+    <*> o .: "Message"
+  parseJSON _ = fail "Invalid Postmark Error Response"
+
 
 instance Show PostmarkError where
   show PostmarkBadApiToken = "Your request did not submit the correct API token in the X-Postmark-Server-Token header."

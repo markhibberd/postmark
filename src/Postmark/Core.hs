@@ -3,8 +3,9 @@ module Postmark.Core (sendEmail) where
 
 
 import Control.Monad
---import Data.ByteString.Char8 (encodeUtf8, decodeUtf8)
-import Data.ByteString.Lazy.Char8 (ByteString)
+import qualified Data.ByteString               as B
+import qualified Data.ByteString.Lazy          as BL
+import Data.Attoparsec.Lazy
 import Data.Aeson
 import Data.Text
 import Data.Text.Encoding
@@ -30,12 +31,18 @@ sendEmail req =
       , requestBody =  RequestBodyLBS . encode . toJSON $ postmarkEmail req
       })
 
-responder :: Response ByteString -> PostmarkResponse
+responder :: Response BL.ByteString -> PostmarkResponse
 responder (Response status _ _ body) =
   let b = LT.toStrict . LE.decodeUtf8 $ body
    in case status of
-    status200 -> undefined -- FIX parse out success case
-    status401 -> UnauthorizedPostmarkResponse
-    status422 -> undefined -- FIX parse out client error
-    status500 -> ServerErrorPostmarkResponse b
+    (Status 200 _) -> undefined -- FIX parse out success case
+    (Status 401 _) -> UnauthorizedPostmarkResponse
+    (Status 422 _) -> case parseOnly json (B.concat . BL.toChunks $ body) of
+      Left _ -> undefined -- FIX handle malformed json
+      Right j -> case fromJSON j of
+        (Error _) -> undefined -- FIX handle non-spec json
+        (Success (PostmarkResponseErrorData code message)) ->
+          undefined -- FIX finish parsing out error code
+--          UnprocessiblePostmarkResponse (toPostmarkError code) message
+    (Status 500 _) -> ServerErrorPostmarkResponse b
     (Status c _) -> UnexpectedResponse c b
