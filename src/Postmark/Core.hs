@@ -1,7 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Postmark.Core where
+module Postmark.Core (sendEmail) where
 
-import Data.ByteString.Char8 ()
+
+import Data.ByteString.Lazy.Char8 hiding (unpack)
 import Data.Aeson
 import Data.Text
 import Data.Text.Encoding
@@ -23,7 +24,8 @@ sendEmail req =
         , ("X-Postmark-Server-Token", encodeUtf8 $  postmarkToken req)
       ]
       , requestBody =  RequestBodyLBS . encode . toJSON $ postmarkEmail req
-    }) >>= \r ->  withManager (httpLbs r) >>= \res ->
-    case res of
-      _ -> undefined --FIX handle each response code and parse into datatypes
+    }) >>= \r ->  withManager (httpLbs r) >>= \res -> return . responder $ res
 
+responder :: Response ByteString -> PostmarkResponse
+responder = undefined
+--FIX handle each response code and parse into datatypes
