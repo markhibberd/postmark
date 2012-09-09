@@ -27,6 +27,3 @@ sendEmail req =
     case res of
       _ -> undefined --FIX handle each response code and parse into datatypes
 
-
-bletch :: Int -> Int
-bletch x = x
