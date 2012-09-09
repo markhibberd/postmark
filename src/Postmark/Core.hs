@@ -24,8 +24,8 @@ sendEmail req =
         , ("X-Postmark-Server-Token", encodeUtf8 $  postmarkToken req)
       ]
       , requestBody =  RequestBodyLBS . encode . toJSON $ postmarkEmail req
-    }) >>= \r ->  withManager (httpLbs r) >>= \res -> return . responder $ res
+    }) >>= \r ->  withManager (httpLbs r) >>= return . responder
 
 responder :: Response ByteString -> PostmarkResponse
-responder = undefined
+responder res = undefined
 --FIX handle each response code and parse into datatypes
