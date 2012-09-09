@@ -53,6 +53,8 @@ data PostmarkResponse =
   | UnprocessiblePostmarkResponse PostmarkError Text
   | ServerErrorPostmarkResponse Text
   | UnexpectedResponse Int Text
+  | PostmarkJsonSyntaxError Int Text
+  | PostmarkJsonFormatError Int Text
 
 data PostmarkError =
     PostmarkBadApiToken
@@ -67,7 +69,7 @@ data PostmarkError =
   | PostmarkBounceQueryException
   | PostmarkJsonRequired
   | PostmarkTooManyMessages
-  | PostmarkUnkownError Int
+  | PostmarkUnkownError Text
   deriving Eq
 
 instance ToJSON Email where
@@ -127,19 +129,19 @@ instance Show PostmarkError where
 postmarkTestToken :: Text
 postmarkTestToken = "POSTMARK_API_TEST"
 
-toPostmarkError :: Int -> PostmarkError
-toPostmarkError 0 = PostmarkBadApiToken
-toPostmarkError 300 = PostmarkInvalidEmail
-toPostmarkError 400 = PostmarkSenderNotFound
-toPostmarkError 401 = PostmarkSenderNotConfirmed
-toPostmarkError 402 = PostmarkInvalidJson
-toPostmarkError 403 = PostmarkIncompatibleJson
-toPostmarkError 405 = PostmarkNotAllowed
-toPostmarkError 406 = PostmarkInactive
-toPostmarkError 407 = PostmarkBounceNotFound
-toPostmarkError 408 = PostmarkBounceQueryException
-toPostmarkError 409 = PostmarkJsonRequired
-toPostmarkError 410 = PostmarkTooManyMessages
+toPostmarkError :: Text -> PostmarkError
+toPostmarkError "0" = PostmarkBadApiToken
+toPostmarkError "300" = PostmarkInvalidEmail
+toPostmarkError "400" = PostmarkSenderNotFound
+toPostmarkError "401" = PostmarkSenderNotConfirmed
+toPostmarkError "402" = PostmarkInvalidJson
+toPostmarkError "403" = PostmarkIncompatibleJson
+toPostmarkError "405" = PostmarkNotAllowed
+toPostmarkError "406" = PostmarkInactive
+toPostmarkError "407" = PostmarkBounceNotFound
+toPostmarkError "408" = PostmarkBounceQueryException
+toPostmarkError "409" = PostmarkJsonRequired
+toPostmarkError "410" = PostmarkTooManyMessages
 toPostmarkError code = PostmarkUnkownError code
 
 toBaseUrl :: PostmarkRequest a -> Text

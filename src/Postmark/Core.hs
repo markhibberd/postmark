@@ -35,12 +35,15 @@ responder :: Response BL.ByteString -> PostmarkResponse
 responder (Response status _ _ body) =
   let b = LT.toStrict . LE.decodeUtf8 $ body
    in case status of
-    (Status 200 _) -> undefined -- FIX parse out success case
+    (Status 200 _) -> case parseJson body of
+      Left (Left msg) -> PostmarkJsonSyntaxError 200 msg
+      Left (Right msg) -> PostmarkJsonFormatError 200 msg
+      Right (PostmarkResponseSuccessData code message ident at to) -> SuccessPostmarkResponse ident undefined to
     (Status 401 _) -> UnauthorizedPostmarkResponse
     (Status 422 _) -> case parseJson body of
-      Left (Left msg) -> undefined -- FIX handle malformed json
-      Left (Right msg) -> undefined -- FIX handle non-spec json
-      Right (PostmarkResponseErrorData code message) -> undefined -- FIX handle valid/invalid code
+      Left (Left msg) -> PostmarkJsonSyntaxError 422 msg
+      Left (Right msg) -> PostmarkJsonFormatError 422 msg
+      Right (PostmarkResponseErrorData code message) -> UnprocessiblePostmarkResponse (toPostmarkError code) message
     (Status 500 _) -> ServerErrorPostmarkResponse b
     (Status c _) -> UnexpectedResponse c b
 
