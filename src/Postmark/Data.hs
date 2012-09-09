@@ -53,8 +53,8 @@ data PostmarkResponse =
   | UnprocessiblePostmarkResponse PostmarkError Text
   | ServerErrorPostmarkResponse Text
   | UnexpectedResponse Int Text
-  | PostmarkJsonSyntaxError Int Text
-  | PostmarkJsonFormatError Int Text
+  | PostmarkJsonSyntaxError Int Text Text
+  | PostmarkJsonFormatError Int Text Text
 
 data PostmarkError =
     PostmarkBadApiToken
