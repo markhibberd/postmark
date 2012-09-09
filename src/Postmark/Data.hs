@@ -8,7 +8,6 @@ import Data.Map as M
 import Data.Maybe
 import Data.Monoid (mappend)
 import Data.Text as T hiding (null)
-import Data.Time
 import Data.List as L
 
 type  BatchEmail = [Email]
@@ -43,10 +42,12 @@ data PostmarkResponseSuccessData =
 data PostmarkResponseErrorData =
     PostmarkResponseErrorData Text Text
 
+
+-- FIX consider smarter selectors for pulling out the data as a UTCTime or ZonedTime
 data PostmarkResponse =
     PostmarkResponseSuccess {
         postmarkMessageId :: Text
-      , postmarkSubmittedAt :: UTCTime
+      , postmarkSubmittedAt :: Text
       , postmarkTo :: Text
       }
   | PostmarkResponseUnauthorized
