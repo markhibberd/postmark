@@ -33,14 +33,14 @@ sendEmail req =
 
 responder :: Response BL.ByteString -> PostmarkResponse
 responder (Response status _ _ body) =
-  let b = LT.toStrict . LE.decodeUtf8 $ body
+  let bt = LT.toStrict . LE.decodeUtf8 $ body
    in case status of
     -- FIX format date
     (Status 200 _) -> withJson body (\(PostmarkResponseSuccessData ident at to) -> PostmarkResponseSuccess ident undefined to)
     (Status 401 _) -> PostmarkResponseUnauthorized
     (Status 422 _) -> withJson body (\(PostmarkResponseErrorData code message) -> PostmarkResponseUnprocessible (toPostmarkError code) message)
-    (Status 500 _) -> PostmarkResponseServerError b
-    (Status c _) -> PostmarkResponseInvalidResponseCode c b
+    (Status 500 _) -> PostmarkResponseServerError bt
+    (Status c _) -> PostmarkResponseInvalidResponseCode c bt
 
 withJson :: FromJSON a => BL.ByteString -> (a -> PostmarkResponse) -> PostmarkResponse
 withJson bs f =
