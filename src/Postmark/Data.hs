@@ -68,7 +68,7 @@ instance ToJSON Email where
     , "To" .= T.intercalate "," (emailTo v)
     , "Subject" .= emailSubject v
     , "ReplyTo" .= emailReplyTo v
-    ] ++ (catMaybes [
+    ] ++ catMaybes [
       ojson "HtmlBody" (emailHtml v)
     , ojson "TextBody" (emailText v)
     , ojson "Tag" (emailTag v)
@@ -76,7 +76,7 @@ instance ToJSON Email where
     , oljson "Bcc" (emailBcc v) (T.intercalate ",")
     , omjson "Headers" (emailHeaders v)
     , oljson "Attachments" (emailAttachments v) id
-    ]))
+    ])
 
 instance ToJSON Attachment where
   toJSON v = object [
@@ -123,7 +123,7 @@ toBaseUrl (HttpPostmarkRequest _ _) = "http://api.postmarkapp.com/"
 toBaseUrl (HttpsPostmarkRequest _ _) = "https://api.postmarkapp.com/"
 
 toUrl :: PostmarkRequest a -> Text -> Text
-toUrl req suffix = (toBaseUrl req) `mappend` suffix
+toUrl req suffix = toBaseUrl req `mappend` suffix
 
 postmarkToken :: PostmarkRequest a -> Text
 postmarkToken (HttpPostmarkRequest t _) = t

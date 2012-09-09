@@ -2,6 +2,7 @@
 module Postmark.Core (sendEmail) where
 
 
+import Control.Monad
 --import Data.ByteString.Char8 (encodeUtf8, decodeUtf8)
 import Data.ByteString.Lazy.Char8 (ByteString)
 import Data.Aeson
@@ -19,7 +20,7 @@ import Postmark.Data
 sendEmail :: PostmarkRequest Email -> IO PostmarkResponse
 sendEmail req =
     parseUrl (unpack $ toUrl req "email") >>= \url ->
-    return (url {
+    (liftM responder . withManager . httpLbs) (url {
         method = "POST"
       , requestHeaders = [
           ("Accept", "application/json")
@@ -27,7 +28,7 @@ sendEmail req =
         , ("X-Postmark-Server-Token", encodeUtf8 $  postmarkToken req)
       ]
       , requestBody =  RequestBodyLBS . encode . toJSON $ postmarkEmail req
-    }) >>= \r ->  withManager (httpLbs r) >>= return . responder
+      })
 
 responder :: Response ByteString -> PostmarkResponse
 responder (Response status _ _ body) =
