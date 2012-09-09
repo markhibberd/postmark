@@ -10,6 +10,8 @@ import Data.Monoid (mappend)
 import Data.Text as T hiding (null)
 import Data.List as L
 
+-- FIX add default implementations for all data for convenient construction
+
 type  BatchEmail = [Email]
 
 data Email = Email {

@@ -16,6 +16,9 @@ import Network.HTTP.Types
 
 import Postmark.Data
 
+-- FIX split into Postmark.Network
+-- FIX add sendBulkEmail
+
 sendEmail :: PostmarkRequest Email -> IO PostmarkResponse
 sendEmail req =
     parseUrl (unpack $ toUrl req "email") >>= \url ->
