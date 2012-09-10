@@ -58,6 +58,7 @@ data PostmarkResponse =
   | PostmarkResponseInvalidResponseCode Int Text
   | PostmarkResponseJsonSyntaxError Int Text Text
   | PostmarkResponseJsonFormatError Int Text Text
+  deriving (Eq, Show)
 
 data PostmarkError =
     PostmarkBadApiToken
@@ -126,9 +127,6 @@ instance Show PostmarkError where
   show PostmarkJsonRequired = "Your HTTP request does not have the Accept and Content-Type headers set to application/json."
   show PostmarkTooManyMessages = "Your batched request contains more than 500 messages."
   show (PostmarkUnkownError code) = "An unexpected error code [" ++ show code ++ "] was retured from postmark."
-
-postmarkTestToken :: Text
-postmarkTestToken = "POSTMARK_API_TEST"
 
 toPostmarkError :: Text -> PostmarkError
 toPostmarkError "0" = PostmarkBadApiToken

@@ -45,4 +45,6 @@ Library
                     Postmark
                     Postmark.Core
                     Postmark.Data
+                    Postmark.Defaults
+
 

@@ -11,5 +11,6 @@ module Postmark (module X) where
 
 import Postmark.Core as X
 import Postmark.Data as X
+import Postmark.Defaults as X
 
 

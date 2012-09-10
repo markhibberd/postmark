@@ -30,6 +30,7 @@ sendEmail req =
         , ("X-Postmark-Server-Token", encodeUtf8 $  postmarkToken req)
       ]
       , requestBody =  RequestBodyLBS . encode . toJSON $ postmarkEmail req
+      , checkStatus = const . const $ Nothing
       })
 
 responder :: Response BL.ByteString -> PostmarkResponse
