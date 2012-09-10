@@ -12,7 +12,7 @@ testKey = "POSTMARK_API_TEST"
 
 defaultEmail :: Email
 defaultEmail = Email {
-    emailFrom = []
+    emailFrom = ""
   , emailTo = []
   , emailCc = []
   , emailBcc = []

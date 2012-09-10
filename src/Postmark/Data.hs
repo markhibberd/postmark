@@ -15,7 +15,7 @@ import Data.List as L
 type  BatchEmail = [Email]
 
 data Email = Email {
-    emailFrom :: [Text]
+    emailFrom :: Text
   , emailTo :: [Text]
   , emailCc :: [Text]
   , emailBcc :: [Text]
@@ -42,7 +42,7 @@ data PostmarkResponseSuccessData =
     PostmarkResponseSuccessData Text Text Text
 
 data PostmarkResponseErrorData =
-    PostmarkResponseErrorData Text Text
+    PostmarkResponseErrorData Int Text
 
 
 -- FIX consider smarter selectors for pulling out the data as a UTCTime or ZonedTime
@@ -73,12 +73,12 @@ data PostmarkError =
   | PostmarkBounceQueryException
   | PostmarkJsonRequired
   | PostmarkTooManyMessages
-  | PostmarkUnkownError Text
+  | PostmarkUnkownError Int
   deriving Eq
 
 instance ToJSON Email where
   toJSON v = object ([
-      "From" .= emailFrom v
+      "From" .= (emailFrom v)
     , "To" .= T.intercalate "," (emailTo v)
     , "Subject" .= emailSubject v
     , "ReplyTo" .= emailReplyTo v
@@ -101,7 +101,7 @@ instance ToJSON Attachment where
 
 instance FromJSON PostmarkResponseSuccessData where
   parseJSON (Object o) = PostmarkResponseSuccessData
-    <$> o .: "MessageId"
+    <$> o .: "MessageID"
     <*> o .: "SubmittedAt"
     <*> o .: "To"
   parseJSON _ = fail "Invalid Postmark Success Response"
@@ -128,19 +128,19 @@ instance Show PostmarkError where
   show PostmarkTooManyMessages = "Your batched request contains more than 500 messages."
   show (PostmarkUnkownError code) = "An unexpected error code [" ++ show code ++ "] was retured from postmark."
 
-toPostmarkError :: Text -> PostmarkError
-toPostmarkError "0" = PostmarkBadApiToken
-toPostmarkError "300" = PostmarkInvalidEmail
-toPostmarkError "400" = PostmarkSenderNotFound
-toPostmarkError "401" = PostmarkSenderNotConfirmed
-toPostmarkError "402" = PostmarkInvalidJson
-toPostmarkError "403" = PostmarkIncompatibleJson
-toPostmarkError "405" = PostmarkNotAllowed
-toPostmarkError "406" = PostmarkInactive
-toPostmarkError "407" = PostmarkBounceNotFound
-toPostmarkError "408" = PostmarkBounceQueryException
-toPostmarkError "409" = PostmarkJsonRequired
-toPostmarkError "410" = PostmarkTooManyMessages
+toPostmarkError :: Int -> PostmarkError
+toPostmarkError 0 = PostmarkBadApiToken
+toPostmarkError 300 = PostmarkInvalidEmail
+toPostmarkError 400 = PostmarkSenderNotFound
+toPostmarkError 401 = PostmarkSenderNotConfirmed
+toPostmarkError 402 = PostmarkInvalidJson
+toPostmarkError 403 = PostmarkIncompatibleJson
+toPostmarkError 405 = PostmarkNotAllowed
+toPostmarkError 406 = PostmarkInactive
+toPostmarkError 407 = PostmarkBounceNotFound
+toPostmarkError 408 = PostmarkBounceQueryException
+toPostmarkError 409 = PostmarkJsonRequired
+toPostmarkError 410 = PostmarkTooManyMessages
 toPostmarkError code = PostmarkUnkownError code
 
 toBaseUrl :: PostmarkRequest a -> Text
