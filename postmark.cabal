@@ -43,7 +43,7 @@ Library
                     src
 
   Exposed-Modules:
-                    Network.Postmark
-                    Network.Postmark.Core
-                    Network.Postmark.Data
-                    Network.Postmark.Defaults
+                    Network.Api.Postmark
+                    Network.Api.Postmark.Core
+                    Network.Api.Postmark.Data
+                    Network.Api.Postmark.Defaults
