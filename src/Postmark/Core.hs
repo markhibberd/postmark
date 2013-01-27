@@ -1,9 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Postmark.Core (sendEmail) where
 
-import Control.Monad
-import qualified Data.ByteString               as B
-import qualified Data.ByteString.Lazy          as BL
+import qualified Data.ByteString as B
+import qualified Data.ByteString.Lazy as BL
 import Data.Attoparsec.Lazy
 import Data.Aeson
 import Data.Text
@@ -11,9 +10,9 @@ import Data.Text.Encoding
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Encoding as LE
 
+import Network.Api.Support
 import Network.HTTP.Conduit
 import Network.HTTP.Types
-
 import Postmark.Data
 
 -- FIX split into Postmark.Network
@@ -21,32 +20,26 @@ import Postmark.Data
 
 sendEmail :: PostmarkRequest Email -> IO PostmarkResponse
 sendEmail req =
-    parseUrl (unpack $ toUrl req "email") >>= \url ->
-    (liftM responder . withManager . httpLbs) (url {
-        method = "POST"
-      , requestHeaders = [
-          ("Accept", "application/json")
-        , ("Content-Type", "application/json")
-        , ("X-Postmark-Server-Token", encodeUtf8 $  postmarkToken req)
-      ]
-      , requestBody =  RequestBodyLBS . encode . toJSON $ postmarkEmail req
-      , checkStatus = const . const $ Nothing
-      })
+  runRequest def POST (toUrl req "email") (
+    setHeaders [
+        ("Accept", "application/json")
+      , ("Content-Type", "application/json")
+      , ("X-Postmark-Server-Token", encodeUtf8 $  postmarkToken req)
+      ] <>
+    setJson (postmarkEmail req)
+  ) responder
 
 responder :: Response BL.ByteString -> PostmarkResponse
-responder (Response status _ _ body) =
-  let bt = LT.toStrict . LE.decodeUtf8 $ body
-   in case status of
-    (Status 200 _) ->
-      withJson 200 body (\(PostmarkResponseSuccessData ident at to) -> PostmarkResponseSuccess ident at to)
-    (Status 401 _) ->
-      PostmarkResponseUnauthorized
-    (Status 422 _) ->
-      withJson 422 body (\(PostmarkResponseErrorData code message) -> PostmarkResponseUnprocessible (toPostmarkError code) message)
-    (Status 500 _) ->
-      PostmarkResponseServerError bt
-    (Status c _) ->
-      PostmarkResponseInvalidResponseCode c bt
+responder (Response (Status 200 _) _ _ body) =
+  withJson 200 body (\(PostmarkResponseSuccessData ident at to) -> PostmarkResponseSuccess ident at to)
+responder (Response (Status 401 _) _ _ _) =
+  PostmarkResponseUnauthorized
+responder (Response (Status 422 _) _ _ body) =
+  withJson 422 body (\(PostmarkResponseErrorData code message) -> PostmarkResponseUnprocessible (toPostmarkError code) message)
+responder (Response (Status 500 _) _ _ body) =
+  PostmarkResponseServerError (toText body)
+responder (Response (Status c _) _ _ body) =
+  PostmarkResponseInvalidResponseCode c (toText body)
 
 withJson :: FromJSON a => Int -> BL.ByteString -> (a -> PostmarkResponse) -> PostmarkResponse
 withJson code bs f =

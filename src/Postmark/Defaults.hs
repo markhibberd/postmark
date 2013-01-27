@@ -6,7 +6,6 @@ import Data.Text
 
 import Postmark.Data
 
--- FIX name??
 testKey :: Text
 testKey = "POSTMARK_API_TEST"
 
@@ -24,4 +23,3 @@ defaultEmail = Email {
   , emailHeaders = M.empty
   , emailAttachments = []
   }
-

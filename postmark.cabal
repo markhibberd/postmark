@@ -33,6 +33,7 @@ Library
                     , time                          >= 1.2
                     , timerep                       >= 1.0.3
                     , text                          >= 0.11
+                    , network-api-support           >= 0.0.2
 
 
   GHC-Options:
@@ -46,5 +47,3 @@ Library
                     Postmark.Core
                     Postmark.Data
                     Postmark.Defaults
-
-
