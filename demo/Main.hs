@@ -1,10 +1,8 @@
 module Main where
 
-import Postmark.Demo
+import Network.Postmark.Demo
 
 main ::
   IO ()
 main =
   demo >>= print
-
-

@@ -1,10 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Postmark.Defaults where
+module Network.Postmark.Defaults where
 
 import qualified Data.Map as M
 import Data.Text
 
-import Postmark.Data
+import Network.Postmark.Data
 
 testKey :: Text
 testKey = "POSTMARK_API_TEST"

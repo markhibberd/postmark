@@ -1,12 +1,12 @@
 module Main where
 
-import qualified Postmark.Tests
+import qualified Network.Postmark.Tests
 import Test.Framework
 
 main ::
   IO ()
-main = 
-  defaultMain tests 
+main =
+  defaultMain tests
 
 tests ::
   [Test]
@@ -17,4 +17,3 @@ tests =
         Postmark.Tests.test
       ]
   ]
-

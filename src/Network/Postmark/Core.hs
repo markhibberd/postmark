@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Postmark.Core (
+module Network.Postmark.Core (
   sendEmail
 ) where
 
@@ -9,7 +9,7 @@ import Data.Text.Encoding
 import Network.Api.Support
 import Network.HTTP.Conduit
 import Network.HTTP.Types
-import Postmark.Data
+import Network.Postmark.Data
 
 -- FIX add sendBulkEmail
 

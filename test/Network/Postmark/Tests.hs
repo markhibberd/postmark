@@ -1,4 +1,4 @@
-module Postmark.Tests
+module Network.Postmark.Tests
   (
     main
   , test
@@ -6,7 +6,7 @@ module Postmark.Tests
 
 import Test.Framework
 import Test.Framework.Providers.QuickCheck2 (testProperty)
-import Postmark
+import Network.Postmark
 
 main ::
   IO ()
@@ -26,4 +26,3 @@ prop_identity ::
   -> Bool
 prop_identity n =
   n == n
-

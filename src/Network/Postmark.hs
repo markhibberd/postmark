@@ -1,5 +1,5 @@
 -- |
--- Module:      Postmark
+-- Module:      Network.Postmark
 -- Copyright:   (c) 2012 Mark Hibberd
 -- License:     BSD3
 -- Maintainer:  Mark Hibberd <mark@hibberd.id.au>
@@ -7,10 +7,8 @@
 --
 -- Library for postmarkapp.com HTTP Api
 --
-module Postmark (module X) where
+module Network.Postmark (module X) where
 
-import Postmark.Core as X
-import Postmark.Data as X
-import Postmark.Defaults as X
-
-
+import Network.Postmark.Core as X
+import Network.Postmark.Data as X
+import Network.Postmark.Defaults as X

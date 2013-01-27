@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Postmark.Data where
+module Network.Postmark.Data where
 
 import Control.Applicative
 

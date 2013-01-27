@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Postmark.Demo where
+module Network.Postmark.Demo where
 
-import Postmark
+import Network.Postmark
 
 demo :: IO PostmarkResponse
 demo = sendEmail $ HttpPostmarkRequest testKey defaultEmail {
@@ -12,4 +12,3 @@ demo = sendEmail $ HttpPostmarkRequest testKey defaultEmail {
   , emailHtml = Just "Hello world!"
   , emailReplyTo = "demo-reply-to@postmark.hs"
   }
-
