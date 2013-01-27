@@ -7,8 +7,8 @@ Maintainer:         Mark Hibberd <mark@hibberd.id.au>
 Copyright:          (c) 2012 Mark Hibberd
 Synopsis:           Library for postmarkapp.com HTTP Api
 Category:           Network APIs
-Homepage:           https://github.com/ApiEngine/postmark
-Bug-reports:        https://github.com/ApiEngine/postmark/issues
+Homepage:           https://github.com/apiengine/postmark
+Bug-reports:        https://github.com/apiengine/postmark/issues
 Cabal-Version:      >= 1.8
 Build-Type:         Simple
 Description:
@@ -16,7 +16,7 @@ Description:
 
 Source-Repository   head
   Type:             git
-  Location:         https://github.com/ApiEngine/postmark.git
+  Location:         https://github.com/apiengine/postmark.git
 
 Flag                small_base
   Description:      Choose the new, split-up base package.

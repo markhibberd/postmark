@@ -7,13 +7,13 @@ Copyright:          Mark Hibberd
 Synopsis:           Test package for Library for postmarkapp.com HTTP Api
 Category:           Experimental
 Description:        Test package for Library for postmarkapp.com HTTP Api
-Homepage:           https://github.com/ApiEngine/postmark
+Homepage:           https://github.com/apiengine/postmark
 Cabal-Version:      >= 1.6
 Build-Type:         Simple
 
 Source-Repository   head
   Type:             git
-  Location:         https://github.com/ApiEngine/postmark.git
+  Location:         https://github.com/apiengine/postmark.git
 
 Flag                small_base
   Description:      Choose the new, split-up base package.
@@ -37,4 +37,3 @@ Executable          migrate-test
                    , test-framework
                    , test-framework-quickcheck2
                    , test-framework-hunit
-
