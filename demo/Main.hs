@@ -1,6 +1,6 @@
 module Main where
 
-import Network.Postmark.Demo
+import Network.Api.Postmark.Demo
 
 main ::
   IO ()

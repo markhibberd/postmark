@@ -1,6 +1,6 @@
 module Main where
 
-import qualified Network.Postmark.Tests
+import qualified Network.Api.Postmark.Tests
 import Test.Framework
 
 main ::

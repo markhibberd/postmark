@@ -1,7 +1,7 @@
 :set -isrc -idist/build/autogen
 :set -Wall 
-:l Network.Postmark
-:m + Network.Postmark
+:l Network.Api.Postmark
+:m + Network.Api.Postmark
 :set prompt ">> "
 
 
