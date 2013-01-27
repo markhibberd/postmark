@@ -1,5 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Postmark.Core (sendEmail) where
+module Postmark.Core (
+  sendEmail
+) where
 
 import qualified Data.ByteString.Lazy as BL
 import Data.Text.Encoding
