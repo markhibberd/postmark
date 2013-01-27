@@ -10,5 +10,8 @@
 module Network.Api.Postmark (module X) where
 
 import Network.Api.Postmark.Core as X
-import Network.Api.Postmark.Data as X
-import Network.Api.Postmark.Defaults as X
+import Network.Api.Postmark.Data as X hiding (ojson, oljson, omjson, toText)
+import Network.Api.Postmark.Error as X
+import Network.Api.Postmark.Request as X
+import Network.Api.Postmark.Response as X
+import Network.Api.Postmark.Settings as X
