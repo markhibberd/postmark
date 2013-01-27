@@ -3,6 +3,10 @@ module Postmark.Data where
 
 import Control.Applicative
 
+import qualified Data.ByteString.Lazy as BL
+import qualified Data.Text.Lazy as LT
+import qualified Data.Text.Lazy.Encoding as LE
+
 import Data.Aeson
 import Data.Map as M
 import Data.Maybe
@@ -12,7 +16,7 @@ import Data.List as L
 
 -- FIX add default implementations for all data for convenient construction
 
-type  BatchEmail = [Email]
+type BatchEmail = [Email]
 
 data Email = Email {
     emailFrom :: Text
@@ -114,19 +118,32 @@ instance FromJSON PostmarkResponseErrorData where
 
 
 instance Show PostmarkError where
-  show PostmarkBadApiToken = "Your request did not submit the correct API token in the X-Postmark-Server-Token header."
-  show PostmarkInvalidEmail = "Validation failed for the email request JSON data that you provided."
-  show PostmarkSenderNotFound = "You are trying to send email with a From address that does not have a sender signature."
-  show PostmarkSenderNotConfirmed = "You are trying to send email with a From address that does not have a corresponding confirmed sender signature."
-  show PostmarkInvalidJson = "The JSON input you provided is syntactically incorrect."
-  show PostmarkIncompatibleJson = "The JSON input you provided is syntactically correct, but still not the one we expect."
-  show PostmarkNotAllowed = "You ran out of credits."
-  show PostmarkInactive = "You tried to send to a recipient that has been marked as inactive. Inactive recipients are ones that have generated a hard bounce or a spam complaint."
-  show PostmarkBounceNotFound = "You requested a bounce by ID, but we could not find an entry in our database."
-  show PostmarkBounceQueryException = "You provided bad arguments as a bounces filter."
-  show PostmarkJsonRequired = "Your HTTP request does not have the Accept and Content-Type headers set to application/json."
-  show PostmarkTooManyMessages = "Your batched request contains more than 500 messages."
-  show (PostmarkUnkownError code) = "An unexpected error code [" ++ show code ++ "] was retured from postmark."
+  show PostmarkBadApiToken =
+    "Your request did not submit the correct API token in the X-Postmark-Server-Token header."
+  show PostmarkInvalidEmail =
+    "Validation failed for the email request JSON data that you provided."
+  show PostmarkSenderNotFound =
+    "You are trying to send email with a From address that does not have a sender signature."
+  show PostmarkSenderNotConfirmed =
+    "You are trying to send email with a From address that does not have a corresponding confirmed sender signature."
+  show PostmarkInvalidJson =
+    "The JSON input you provided is syntactically incorrect."
+  show PostmarkIncompatibleJson =
+    "The JSON input you provided is syntactically correct, but still not the one we expect."
+  show PostmarkNotAllowed =
+    "You ran out of credits."
+  show PostmarkInactive =
+    "You tried to send to a recipient that has been marked as inactive. Inactive recipients are ones that have generated a hard bounce or a spam complaint."
+  show PostmarkBounceNotFound =
+    "You requested a bounce by ID, but we could not find an entry in our database."
+  show PostmarkBounceQueryException =
+    "You provided bad arguments as a bounces filter."
+  show PostmarkJsonRequired =
+    "Your HTTP request does not have the Accept and Content-Type headers set to application/json."
+  show PostmarkTooManyMessages =
+    "Your batched request contains more than 500 messages."
+  show (PostmarkUnkownError code) =
+    "An unexpected error code [" ++ show code ++ "] was retured from postmark."
 
 toPostmarkError :: Int -> PostmarkError
 toPostmarkError 0 = PostmarkBadApiToken
@@ -158,6 +175,19 @@ postmarkEmail :: PostmarkRequest a -> a
 postmarkEmail (HttpPostmarkRequest _ e) = e
 postmarkEmail (HttpsPostmarkRequest _ e) = e
 
+successDataToResponse :: PostmarkResponseSuccessData -> PostmarkResponse
+successDataToResponse (PostmarkResponseSuccessData ident at to) =
+  PostmarkResponseSuccess ident at to
+
+errorDataToResponse :: PostmarkResponseErrorData -> PostmarkResponse
+errorDataToResponse (PostmarkResponseErrorData code message) =
+  PostmarkResponseUnprocessible (toPostmarkError code) message
+
+syntaxErr :: Int -> BL.ByteString -> Text -> PostmarkResponse
+syntaxErr code body msg = PostmarkResponseJsonSyntaxError code msg (toText body)
+
+decodeErr :: Int -> BL.ByteString -> Text -> PostmarkResponse
+decodeErr code body msg = PostmarkResponseJsonFormatError code msg (toText body)
 
 ojson :: ToJSON a => Text -> Maybe a -> Maybe (Text, Value)
 ojson k = fmap (k .=)
@@ -168,4 +198,5 @@ oljson k vs f = if L.null vs then Nothing else Just (k .= f vs)
 omjson :: (ToJSON a) => Text -> Map Text a -> Maybe (Text, Value)
 omjson k vs = if M.null vs then Nothing else Just (k .= vs)
 
-
+toText :: BL.ByteString -> Text
+toText = LT.toStrict . LE.decodeUtf8
