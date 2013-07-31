@@ -1,5 +1,5 @@
 Name:               postmark
-Version:            0.0.2
+Version:            0.1.0
 License:            BSD3
 License-File:       LICENSE
 Author:             Mark Hibberd <mark@hibberd.id.au>
@@ -54,6 +54,7 @@ Library
                     Network.Api.Postmark.Request
                     Network.Api.Postmark.Response
                     Network.Api.Postmark.Settings
+                    Network.Api.Postmark.Tutorial
 
 executable         postmark-demo
     if flag(demo)
