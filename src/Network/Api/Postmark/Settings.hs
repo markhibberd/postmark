@@ -7,7 +7,7 @@ data PostmarkSettings =
   PostmarkSettings {
       apiUrl :: Text
     , apiToken :: Text
-    }
+    } deriving (Eq, Show)
 
 postmarkTestToken :: Text
 postmarkTestToken = "POSTMARK_API_TEST"
