@@ -66,3 +66,4 @@ executable         postmark-demo
     hs-source-dirs:    dist demo
     build-depends:     base
                      , postmark
+                     , text
