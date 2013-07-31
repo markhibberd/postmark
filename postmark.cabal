@@ -21,6 +21,10 @@ Source-Repository   head
 Flag                small_base
   Description:      Choose the new, split-up base package.
 
+Flag demo
+    Description:   Build the demo executable.
+    Default:       False
+
 Library
   Build-Depends:
                     base                            >= 3          && < 5
@@ -50,3 +54,15 @@ Library
                     Network.Api.Postmark.Request
                     Network.Api.Postmark.Response
                     Network.Api.Postmark.Settings
+
+executable         postmark-demo
+    if flag(demo)
+        Buildable: True
+    else
+        Buildable: False
+
+    ghc-options:   -Wall -threaded -O2
+    main-is:           ../demo/demo.hs
+    hs-source-dirs:    dist demo
+    build-depends:     base
+                     , postmark
