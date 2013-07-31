@@ -16,4 +16,4 @@ ghci:
 
 
 demo:
-	cabal configure -f demo && cabal build
+	cabal-dev configure -f demo && cabal-dev build
