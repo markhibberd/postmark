@@ -10,7 +10,7 @@ import Network.Api.Support
 import Network.HTTP.Types
 
 data PostmarkRequest e a where
-  PostmarkRequest :: (FromJSON e, FromJSON a) => StdMethod -> Text -> RequestTransformer IO -> PostmarkRequest e a
+  PostmarkRequest :: (FromJSON e, FromJSON a) => StdMethod -> Text -> RequestTransformer -> PostmarkRequest e a
 
 type PostmarkRequest' a =
   PostmarkRequest PostmarkError a

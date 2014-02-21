@@ -1,5 +1,5 @@
 Name:               postmark
-Version:            0.1.0
+Version:            0.1.1
 License:            BSD3
 License-File:       LICENSE
 Author:             Mark Hibberd <mark@hibberd.id.au>
@@ -32,8 +32,8 @@ Library
                     , attoparsec                    >= 0.10
                     , bytestring                    >= 0.9
                     , containers                    >= 0.4
-                    , http-conduit                  >= 1.4
                     , http-types                    >= 0.6
+                    , http-client                   >= 0.1
                     , time                          >= 1.2
                     , timerep                       >= 1.0.3
                     , text                          >= 0.11
