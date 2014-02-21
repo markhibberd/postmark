@@ -37,7 +37,7 @@ Library
                     , time                          >= 1.2
                     , timerep                       >= 1.0.3
                     , text                          >= 0.11
-                    , network-api-support           >= 0.0.3
+                    , network-api-support           >= 0.0.8
 
 
   GHC-Options:
