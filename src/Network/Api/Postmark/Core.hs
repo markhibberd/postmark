@@ -14,7 +14,7 @@ import Network.Api.Postmark.Data
 import Network.Api.Postmark.Request
 import Network.Api.Postmark.Response
 import Network.Api.Postmark.Settings
-import Network.HTTP.Conduit
+import Network.HTTP.Client
 import Network.HTTP.Types
 
 -- * Api endpoints
@@ -34,7 +34,7 @@ emails es = PostmarkRequest POST "/email/batch" $ setJson es
 -- | Run the specified request with the specified settings.
 request :: PostmarkSettings -> PostmarkRequest e a -> IO (PostmarkResponse e a)
 request settings (PostmarkRequest stdmethod url transform) =
-  runRequest def stdmethod (apiUrl settings <> url) (
+  runRequest defaultManagerSettings stdmethod (apiUrl settings <> url) (
     addHeader ("Accept", "application/json") <>
     addHeader ("X-Postmark-Server-Token", encodeUtf8 $  apiToken settings) <>
     transform
