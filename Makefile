@@ -1,19 +1,28 @@
-.PHONY: test build demo
+MFLAGS = -s
+MAKEFLAGS = $(MFLAGS)
+SANDBOX = .cabal-sandbox
+
+.PHONY: test quick-test build deps ghci demo
 
 default: test
 
-test:
-	cabal-dev configure --enable-tests && cabal-dev build && cabal-dev test
+${SANDBOX}:
+	cabal sandbox init
 
-build:
-	cabal-dev configure && cabal-dev build
+test: ${SANDBOX}
+	cabal configure --enable-tests && cabal build && cabal test
 
-dev:
-	cabal-dev install-deps
+demo: ${SANDBOX}
+	cabal configure -f demo && cabal build 
 
-ghci:
-	cabal-dev configure && cabal-dev build && cabal-dev ghci
+quick-test: ${SANDBOX}
+	runhaskell -package-db=${SANDBOX}/*-packages.conf.d -isrc -itest -XNoImplicitPrelude -XNoMonomorphismRestriction test/testdev.hs
 
+build: ${SANDBOX}
+	cabal configure && cabal build
 
-demo:
-	cabal-dev configure -f demo && cabal-dev build
+deps: ${SANDBOX}
+	cabal install --only-dependencies
+
+repl: ${SANDBOX}
+	cabal configure && cabal build && cabal repl

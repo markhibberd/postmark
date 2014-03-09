@@ -25,7 +25,7 @@ testhttps =
 
 testhttp :: IO (PostmarkResponse' Sent)
 testhttp =
-  request postmarkHttpsTest $ email fakeemail
+  request postmarkHttpTest $ email fakeemail
 
 custom :: PostmarkSettings -> Text -> Text -> Text -> Text -> IO (PostmarkResponse' Sent)
 custom settings from to subject html =
