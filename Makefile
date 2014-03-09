@@ -13,7 +13,7 @@ test: ${SANDBOX}
 	cabal configure --enable-tests && cabal build && cabal test
 
 demo: ${SANDBOX}
-	cabal configure -f demo && cabal build 
+	cabal configure -f demo && cabal build
 
 quick-test: ${SANDBOX}
 	runhaskell -package-db=${SANDBOX}/*-packages.conf.d -isrc -itest -XNoImplicitPrelude -XNoMonomorphismRestriction test/testdev.hs
