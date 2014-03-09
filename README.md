@@ -16,3 +16,7 @@ If you need help or have any questions, get in contact:
  * [@markhibberd](https://twitter.com/markhibberd) on twitter
  * `[mth]` on freenode #haskell/#scalaz
  * mark@hibberd.id.au on email
+
+## Notes
+
+* [![Build Status](https://secure.travis-ci.org/markhibberd/postmark.png)](http://travis-ci.org/markhibberd/postmark)
