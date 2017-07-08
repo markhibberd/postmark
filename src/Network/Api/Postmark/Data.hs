@@ -1,8 +1,6 @@
 {-# LANGUAGE OverloadedStrings, GADTSyntax #-}
 module Network.Api.Postmark.Data where
 
-import Control.Applicative
-
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Encoding as LE
