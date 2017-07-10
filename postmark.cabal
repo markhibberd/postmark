@@ -11,6 +11,7 @@ Homepage:           https://github.com/apiengine/postmark
 Bug-reports:        https://github.com/apiengine/postmark/issues
 Cabal-Version:      >= 1.8
 Build-Type:         Simple
+Tested-With:        GHC == 7.10.3, GHC == 8.0.2
 Description:
   postmark
 
@@ -34,7 +35,7 @@ Library
                     , containers                    >= 0.4
                     , http-types                    >= 0.6
                     , text                          >= 0.11
-                    , network-api-support           >= 0.1.0
+                    , network-api-support           >= 0.2.2
                     , http-client-tls               >= 0.2.1.1
 
 
@@ -54,6 +55,7 @@ Library
                     Network.Api.Postmark.Settings
                     Network.Api.Postmark.Tutorial
 
+
 executable         postmark-demo
     if flag(demo)
         Buildable: True
@@ -66,3 +68,5 @@ executable         postmark-demo
     build-depends:     base
                      , postmark
                      , text
+
+

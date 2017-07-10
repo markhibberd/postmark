@@ -1,8 +1,6 @@
 {-# LANGUAGE OverloadedStrings, GADTSyntax #-}
 module Network.Api.Postmark.Error where
 
-import Control.Applicative
-
 import Data.Aeson
 import Data.Text
 
