@@ -50,7 +50,7 @@ Sending multiple emails.
 
 > import Network.Api.Postmark
 >
-> demo = request postmarkHttpTrest $ emails [
+> demo = request postmarkHttpTest $ emails [
 >     defaultEmail {
 >       emailFrom = "demo-from@postmark.hs"
 >     , emailTo = ["demo-to@postmark.hs"]

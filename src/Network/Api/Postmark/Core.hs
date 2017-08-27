@@ -2,6 +2,7 @@
 module Network.Api.Postmark.Core (
   email,
   emails,
+  emailWithTemplate,
   request
 ) where
 
@@ -28,6 +29,9 @@ email e = PostmarkRequest POST "/email" $ setJson e
 emails :: [Email] -> PostmarkRequest' [Sent]
 emails es = PostmarkRequest POST "/email/batch" $ setJson es
 
+-- | Send a single email using a template: https://postmarkapp.com/developer/api/templates-api#email-with-template
+emailWithTemplate :: EmailWithTemplate -> PostmarkRequest' Sent
+emailWithTemplate ewt = PostmarkRequest POST "/email/withTemplate" $ setJson ewt
 
 -- * Run a request
 
