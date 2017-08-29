@@ -25,6 +25,13 @@ data PostmarkErrorType =
   | PostmarkBounceQueryException
   | PostmarkJsonRequired
   | PostmarkTooManyMessages
+  | PostmarkTemplateQueryException
+  | PostmarkTemplateNotFound
+  | PostmarkTemplateLimitWouldBeExceeded
+  | PostmarkTemplateNoDataReceived
+  | PostmarkTemplateRequiredFieldMissing
+  | PostmarkTemplateFieldTooLarge
+  | PostmarkTemplateFieldInvalid
   | PostmarkUnkownError Int
   deriving Eq
 
@@ -44,6 +51,13 @@ instance FromJSON PostmarkError where
           408 -> PostmarkBounceQueryException
           409 -> PostmarkJsonRequired
           410 -> PostmarkTooManyMessages
+          1100 -> PostmarkTemplateQueryException
+          1101 -> PostmarkTemplateNotFound
+          1105 -> PostmarkTemplateLimitWouldBeExceeded
+          1109 -> PostmarkTemplateNoDataReceived
+          1120 -> PostmarkTemplateRequiredFieldMissing
+          1121 -> PostmarkTemplateFieldTooLarge
+          1122 -> PostmarkTemplateFieldInvalid
           _ -> PostmarkUnkownError code) (o .: "ErrorCode"))
     <*> (o .: "Message")
   parseJSON _ = fail "Invalid Postmark Error Response"
@@ -73,5 +87,19 @@ instance Show PostmarkErrorType where
     "Your HTTP request does not have the Accept and Content-Type headers set to application/json."
   show PostmarkTooManyMessages =
     "Your batched request contains more than 500 messages."
+  show PostmarkTemplateQueryException =
+    "The value of a GET parameter for the request is not valid."
+  show PostmarkTemplateNotFound =
+     "TemplateId not found. The TemplateId references a Template that does not exist, or is not associated with the Server specified for this request."
+  show PostmarkTemplateLimitWouldBeExceeded =
+     "Template limit would be exceeded. A Server may have up to 300 active templates, processing this request would exceed this limit."
+  show PostmarkTemplateNoDataReceived =
+      "No Template data received. You didn’t provide JSON body parameters in your request. Refer to the Template API reference for more details on required parameters."
+  show PostmarkTemplateRequiredFieldMissing =
+      "A required Template field is missing. A required field is missing from the body of the POST request."
+  show PostmarkTemplateFieldTooLarge =
+      "Template field is too large. One of the values of the request's body exceeds our size restrictions for that field."
+  show PostmarkTemplateFieldInvalid =
+      "A Templated field has been submitted that is invalid. One of the fields of the request body is invalid."
   show (PostmarkUnkownError code) =
     "An unexpected error code [" ++ show code ++ "] was retured from postmark."

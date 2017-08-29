@@ -41,6 +41,20 @@ data Attachment = Attachment {
   , attachmentContentType :: Text
   }
 
+data EmailWithTemplate = EmailWithTemplate {
+    templateId :: Int
+  , templateModel :: Map Text Text
+  , inlineCss :: Bool
+  , emailFrom' :: Text
+  , emailTo' :: [Text]
+  , emailCc' :: [Text]
+  , emailBcc' :: [Text]
+  , emailTag' :: Maybe Text
+  , emailReplyTo' :: Text
+  , emailHeaders' :: Map Text Text
+  , emailAttachments' :: [Attachment]
+  }
+
 defaultEmail :: Email
 defaultEmail = Email {
     emailFrom = ""
@@ -56,6 +70,20 @@ defaultEmail = Email {
   , emailAttachments = []
   }
 
+defaultEmailWithTemplate :: EmailWithTemplate
+defaultEmailWithTemplate = EmailWithTemplate {
+    templateId = 0
+  , templateModel = M.empty
+  , inlineCss = False
+  , emailFrom' = ""
+  , emailTo' = []
+  , emailCc' = []
+  , emailBcc' = []
+  , emailTag' = Nothing
+  , emailReplyTo' = ""
+  , emailHeaders' = M.empty
+  , emailAttachments' = []
+  }
 
 instance ToJSON Email where
   toJSON v = object ([
@@ -80,6 +108,20 @@ instance ToJSON Attachment where
     , "ContentType" .= attachmentContentType v
     ]
 
+instance ToJSON EmailWithTemplate where
+  toJSON v = object ([
+      "TemplateId" .= templateId v
+    , "TemplateModel" .= templateModel v
+    , "From" .= (emailFrom' v)
+    , "To" .= T.intercalate "," (emailTo' v)
+    , "ReplyTo" .= emailReplyTo' v
+    ] ++ catMaybes [
+      ojson "Tag" (emailTag' v)
+    , oljson "Cc" (emailCc' v) (T.intercalate ",")
+    , oljson "Bcc" (emailBcc' v) (T.intercalate ",")
+    , omjson "Headers" (emailHeaders' v)
+    , oljson "Attachments" (emailAttachments' v) id
+    ])
 -- * Response types
 
 data Sent =
