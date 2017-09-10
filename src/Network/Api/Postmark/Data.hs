@@ -32,8 +32,17 @@ data Email = Email {
   , emailText :: Maybe Text
   , emailReplyTo :: Text
   , emailHeaders :: Map Text Text
+  , emailTrackOpens :: Maybe Bool
+  , emailTrackLinks :: Maybe TrackLinks
   , emailAttachments :: [Attachment]
   }
+
+data TrackLinks
+  = None
+  | HtmlAndText
+  | HtmlOnly
+  | TextOnly
+  deriving (Show)
 
 data Attachment = Attachment {
     attachmentName :: Text
@@ -52,6 +61,8 @@ data EmailWithTemplate = EmailWithTemplate {
   , emailTag' :: Maybe Text
   , emailReplyTo' :: Text
   , emailHeaders' :: Map Text Text
+  , emailTrackOpens' :: Maybe Bool
+  , emailTrackLinks' :: Maybe TrackLinks
   , emailAttachments' :: [Attachment]
   }
 
@@ -67,6 +78,8 @@ defaultEmail = Email {
   , emailText = Nothing
   , emailReplyTo = ""
   , emailHeaders = M.empty
+  , emailTrackOpens = Nothing
+  , emailTrackLinks = Nothing
   , emailAttachments = []
   }
 
@@ -82,6 +95,8 @@ defaultEmailWithTemplate = EmailWithTemplate {
   , emailTag' = Nothing
   , emailReplyTo' = ""
   , emailHeaders' = M.empty
+  , emailTrackOpens' = Nothing
+  , emailTrackLinks' = Nothing
   , emailAttachments' = []
   }
 
@@ -98,8 +113,13 @@ instance ToJSON Email where
     , oljson "Cc" (emailCc v) (T.intercalate ",")
     , oljson "Bcc" (emailBcc v) (T.intercalate ",")
     , omjson "Headers" (emailHeaders v)
+    , ojson "TrackOpens" (emailTrackOpens v)
+    , ojson "TrackLinks" (emailTrackLinks v)
     , oljson "Attachments" (emailAttachments v) id
     ])
+
+instance ToJSON TrackLinks where
+  toJSON a = String (pack . show $ a)
 
 instance ToJSON Attachment where
   toJSON v = object [
@@ -120,6 +140,8 @@ instance ToJSON EmailWithTemplate where
     , oljson "Cc" (emailCc' v) (T.intercalate ",")
     , oljson "Bcc" (emailBcc' v) (T.intercalate ",")
     , omjson "Headers" (emailHeaders' v)
+    , ojson "TrackOpens" (emailTrackOpens' v)
+    , ojson "TrackLinks" (emailTrackLinks' v)
     , oljson "Attachments" (emailAttachments' v) id
     ])
 -- * Response types
