@@ -119,7 +119,7 @@ instance ToJSON Email where
     ])
 
 instance ToJSON TrackLinks where
-  toJSON a = String (pack . show $ a)
+  toJSON = String . pack . show
 
 instance ToJSON Attachment where
   toJSON v = object [
