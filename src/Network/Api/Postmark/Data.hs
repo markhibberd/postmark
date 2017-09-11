@@ -118,8 +118,15 @@ instance ToJSON Email where
     , oljson "Attachments" (emailAttachments v) id
     ])
 
+{- The reason we are being explicit here is because the serialized constructors
+   for TrackLinks match the possible values in the Postmark API.
+   We don't want to send values wholesale if new constructors come along.
+-}
 instance ToJSON TrackLinks where
-  toJSON = String . pack . show
+  toJSON None = String . pack . show $ None
+  toJSON HtmlAndText = String . pack . show $ HtmlAndText
+  toJSON HtmlOnly = String . pack . show $ HtmlOnly
+  toJSON TextOnly = String . pack . show $ TextOnly
 
 instance ToJSON Attachment where
   toJSON v = object [
