@@ -126,7 +126,7 @@ instance ToJSON TrackLinks where
   toJSON v =
     toJSON $ case v of
       None ->
-        "None"
+        "None" :: Text
       HtmlAndText ->
         "HtmlAndText"
       HtmlOnly ->
