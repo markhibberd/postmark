@@ -123,10 +123,16 @@ instance ToJSON Email where
    We don't want to send values wholesale if new constructors come along.
 -}
 instance ToJSON TrackLinks where
-  toJSON None = String . pack . show $ None
-  toJSON HtmlAndText = String . pack . show $ HtmlAndText
-  toJSON HtmlOnly = String . pack . show $ HtmlOnly
-  toJSON TextOnly = String . pack . show $ TextOnly
+  toJSON v =
+    toJSON $ case v of
+      None ->
+        "None"
+      HtmlAndText ->
+        "HtmlAndText"
+      HtmlOnly ->
+        "HtmlOnly"
+      TextOnly ->
+        "TextOnly"
 
 instance ToJSON Attachment where
   toJSON v = object [
