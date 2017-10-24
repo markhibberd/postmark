@@ -16,6 +16,8 @@ fakeemail = defaultEmail {
   , emailSubject = "demo, yes it really is a demo"
   , emailTag = Just "demo"
   , emailHtml = Just "Hello world!"
+  , emailTrackOpens = Just True
+  , emailTrackLinks = Just HtmlOnly
   , emailReplyTo = "demo-reply-to@postmark.hs"
   }
 
