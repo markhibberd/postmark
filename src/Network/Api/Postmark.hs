@@ -41,7 +41,8 @@ module Network.Api.Postmark (
   PostmarkResponse', syntaxErr, formatErr,
 
   -- * Settings
-  PostmarkSettings (..), postmarkTestToken,
+  PostmarkSettings (..),
+  PostmarkApiToken, postmarkTestToken,
   postmarkHttpTest, postmarkHttpsTest,
   postmarkHttp, postmarkHttps
 

@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Network.Api.Postmark.Settings (
   PostmarkSettings (..),
+  PostmarkApiToken,
   postmarkTestToken,
   postmarkHttpTest,
   postmarkHttpsTest,
@@ -10,13 +11,15 @@ module Network.Api.Postmark.Settings (
 
 import Data.Text
 
+type PostmarkApiToken = Text
+
 data PostmarkSettings =
   PostmarkSettings {
       apiUrl :: Text
-    , apiToken :: Text
+    , apiToken :: PostmarkApiToken
     } deriving (Eq, Show)
 
-postmarkTestToken :: Text
+postmarkTestToken :: PostmarkApiToken
 postmarkTestToken = "POSTMARK_API_TEST"
 
 postmarkHttpTest :: PostmarkSettings
@@ -25,8 +28,8 @@ postmarkHttpTest = postmarkHttp postmarkTestToken
 postmarkHttpsTest :: PostmarkSettings
 postmarkHttpsTest = postmarkHttps postmarkTestToken
 
-postmarkHttp :: Text -> PostmarkSettings
+postmarkHttp :: PostmarkApiToken -> PostmarkSettings
 postmarkHttp = PostmarkSettings "http://api.postmarkapp.com"
 
-postmarkHttps :: Text -> PostmarkSettings
+postmarkHttps :: PostmarkApiToken -> PostmarkSettings
 postmarkHttps = PostmarkSettings "https://api.postmarkapp.com"
