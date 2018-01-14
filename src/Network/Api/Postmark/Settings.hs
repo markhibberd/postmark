@@ -11,6 +11,15 @@ module Network.Api.Postmark.Settings (
 
 import Data.Text
 
+-- | The Postmark “server token” which is sent via the
+-- @X-Postmark-Server-Token@ HTTP header. You can find your server
+-- token under the “Credentials” tab on the Postmark website.
+--
+-- If you do not yet have a Postmark account, or if you want to send
+-- test emails that don't actually get delivered, you may use
+-- 'postmarkTestToken'.
+--
+-- https://postmarkapp.com/developer/api/overview#authentication
 type PostmarkApiToken = Text
 
 data PostmarkSettings =
