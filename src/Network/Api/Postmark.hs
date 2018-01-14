@@ -12,6 +12,7 @@
 -- Source and more information can be found at <https://github.com/apiengine/postmark>.
 --
 -- To experiment with a live demo try:
+--
 -- > $ git clone https://github.com/apiengine/postmark
 -- > $ cd postmark
 -- > $ cabal install --only-dependencies &&  cabal configure -f demo  && cabal build
