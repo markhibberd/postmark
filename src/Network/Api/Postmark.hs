@@ -29,21 +29,21 @@ module Network.Api.Postmark (
 
   -- * Sending email
   email, emails, Email (..), defaultEmail,
-
   -- ** Using a template
   emailWithTemplate, EmailWithTemplate (..), defaultEmailWithTemplate,
-
-  -- ** Ancillary types
-  TrackLinks (..), Attachment (..), Sent (..),
+  -- ** Tracking links
+  TrackLinks (..),
+  -- ** Attachments
+  Attachment (..),
+  -- ** Response type
+  Sent (..),
 
   -- * Error types
   PostmarkError (..), PostmarkErrorType (..),
 
   -- * Lower-level API
-
   -- ** Request
   request, PostmarkRequest (..), PostmarkRequest',
-
   -- ** Response
   PostmarkResponse (..), PostmarkUnexpectedType (..),
   PostmarkResponse', syntaxErr, formatErr,

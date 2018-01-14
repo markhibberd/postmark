@@ -17,7 +17,7 @@ module Network.Api.Postmark.Data (
   -- ** Attachment
   Attachment (..),
 
-  -- ** Sent
+  -- ** Response type
   Sent (..),
 
   -- * Internal Json tools
@@ -190,6 +190,7 @@ instance ToJSON EmailWithTemplate where
     , ojson "TrackLinks" (emailTrackLinks' v)
     , oljson "Attachments" (emailAttachments' v) id
     ])
+
 -- * Response types
 
 data Sent =
