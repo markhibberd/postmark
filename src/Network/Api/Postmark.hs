@@ -22,29 +22,31 @@
 --
 module Network.Api.Postmark (
 
-  -- * Core
-  email, emails, emailWithTemplate, request,
+  -- * Settings
+  PostmarkSettings (..), PostmarkApiToken, postmarkHttp, postmarkHttps,
+  -- ** Using the test token
+  postmarkTestToken, postmarkHttpTest, postmarkHttpsTest,
 
-  -- * Data
-  Email (..), TrackLinks (..), Attachment (..),
-  EmailWithTemplate (..), defaultEmail, defaultEmailWithTemplate,
-  Sent (..),
+  -- * Sending email
+  email, emails, Email (..), defaultEmail,
 
-  -- * Error
+  -- ** Using a template
+  emailWithTemplate, EmailWithTemplate (..), defaultEmailWithTemplate,
+
+  -- ** Ancillary types
+  TrackLinks (..), Attachment (..), Sent (..),
+
+  -- * Error types
   PostmarkError (..), PostmarkErrorType (..),
 
-  -- * Request
-  PostmarkRequest (..), PostmarkRequest',
+  -- * Lower-level API
 
-  -- * Response
+  -- ** Request
+  request, PostmarkRequest (..), PostmarkRequest',
+
+  -- ** Response
   PostmarkResponse (..), PostmarkUnexpectedType (..),
   PostmarkResponse', syntaxErr, formatErr,
-
-  -- * Settings
-  PostmarkSettings (..),
-  PostmarkApiToken, postmarkTestToken,
-  postmarkHttpTest, postmarkHttpsTest,
-  postmarkHttp, postmarkHttps
 
 ) where
 

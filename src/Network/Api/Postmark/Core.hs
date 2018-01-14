@@ -1,9 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Network.Api.Postmark.Core (
+
+  -- * API endpoints
   email,
   emails,
   emailWithTemplate,
+
+  -- * Run a request
   request
+
 ) where
 
 import qualified Data.ByteString.Lazy as BL

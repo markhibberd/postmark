@@ -1,11 +1,23 @@
 {-# LANGUAGE OverloadedStrings, GADTSyntax #-}
 module Network.Api.Postmark.Data (
+
+  -- * Request types
+
+  -- ** Email
   Email (..),
-  TrackLinks (..),
-  Attachment (..),
-  EmailWithTemplate (..),
   defaultEmail,
+
+  -- ** Email with template
+  EmailWithTemplate (..),
   defaultEmailWithTemplate,
+
+  -- ** Track links
+  TrackLinks (..),
+
+  -- ** Attachment
+  Attachment (..),
+
+  -- ** Sent
   Sent (..),
 
   -- * Internal Json tools

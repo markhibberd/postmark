@@ -1,12 +1,19 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Network.Api.Postmark.Settings (
+
+  -- * Settings types
   PostmarkSettings (..),
   PostmarkApiToken,
+
+  -- * Settings construction
+  postmarkHttp,
+  postmarkHttps,
+
+  -- * Using the test token
   postmarkTestToken,
   postmarkHttpTest,
-  postmarkHttpsTest,
-  postmarkHttp,
-  postmarkHttps
+  postmarkHttpsTest
+
 ) where
 
 import Data.Text
