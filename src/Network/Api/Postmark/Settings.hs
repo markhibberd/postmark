@@ -19,6 +19,10 @@ data PostmarkSettings =
     , apiToken :: PostmarkApiToken
     } deriving (Eq, Show)
 
+-- | An API token that you can use when you want to send test emails that
+-- don't actually get delivered to the recipient.
+--
+-- https://postmarkapp.com/developer/api/overview#authentication
 postmarkTestToken :: PostmarkApiToken
 postmarkTestToken = "POSTMARK_API_TEST"
 
