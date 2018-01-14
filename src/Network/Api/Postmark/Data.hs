@@ -1,5 +1,31 @@
 {-# LANGUAGE OverloadedStrings, GADTSyntax #-}
-module Network.Api.Postmark.Data where
+module Network.Api.Postmark.Data (
+
+  -- * Request types
+
+  -- ** Email
+  Email (..),
+  defaultEmail,
+
+  -- ** Email with template
+  EmailWithTemplate (..),
+  defaultEmailWithTemplate,
+
+  -- ** Track links
+  TrackLinks (..),
+
+  -- ** Attachment
+  Attachment (..),
+
+  -- ** Response type
+  Sent (..),
+
+  -- * Internal Json tools
+  ojson,
+  oljson,
+  omjson,
+  toText
+) where
 
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text.Lazy as LT
@@ -37,11 +63,18 @@ data Email = Email {
   , emailAttachments :: [Attachment]
   }
 
+-- | When “link tracking” is enabled, Postmark will record statistics when a
+-- user clicks on a link in an email. You can use this feature to determine
+-- if a particular recipient has clicked a link that was emailed to them.
+--
+-- https://postmarkapp.com/developer/user-guide/tracking-links#enabling-link-tracking
 data TrackLinks
-  = None
-  | HtmlAndText
-  | HtmlOnly
-  | TextOnly
+  = None        -- ^ No links will be replaced or tracked.
+  | HtmlAndText -- ^ Links will be replaced in both HTML and text bodies.
+  | HtmlOnly    -- ^ Links will be replaced in only the HTML body. You may
+                --   want this option if you do not want encoded tracking
+                --   links to appear in the plain text of an email.
+  | TextOnly    -- ^ Links will be replaced in only the text body.
   deriving (Show)
 
 data Attachment = Attachment {
@@ -157,6 +190,7 @@ instance ToJSON EmailWithTemplate where
     , ojson "TrackLinks" (emailTrackLinks' v)
     , oljson "Attachments" (emailAttachments' v) id
     ])
+
 -- * Response types
 
 data Sent =

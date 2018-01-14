@@ -1,4 +1,10 @@
-module Network.Api.Postmark.Response where
+module Network.Api.Postmark.Response (
+  PostmarkResponse (..),
+  PostmarkUnexpectedType (..),
+  PostmarkResponse',
+  syntaxErr,
+  formatErr
+) where
 
 import qualified Data.ByteString.Lazy as BL
 import Data.Text
