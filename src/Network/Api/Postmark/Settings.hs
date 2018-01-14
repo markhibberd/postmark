@@ -22,6 +22,11 @@ import Data.Text
 -- https://postmarkapp.com/developer/api/overview#authentication
 type PostmarkApiToken = Text
 
+-- | To construct 'PostmarkSettings', use 'postmarkHttps' or
+-- 'postmarkHttp'.
+--
+-- Or to use the test API instead, use 'postmarkHttpsTest' or
+-- 'postmarkHttpTest'.
 data PostmarkSettings =
   PostmarkSettings {
       apiUrl :: Text
