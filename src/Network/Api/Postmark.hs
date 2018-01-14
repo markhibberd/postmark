@@ -7,7 +7,7 @@
 --
 -- Library for postmarkapp.com HTTP Api.
 --
--- To get start see some examples in the 'Network.Api.Postmark.Tutorial' module at <http://hackage.haskell.org/packages/archive/postmark/0.0.2/doc/html/Network-Api-Postmark-Tutorial.html>.
+-- To get start see some examples in the "Network.Api.Postmark.Tutorial" module.
 --
 -- Source and more information can be found at <https://github.com/apiengine/postmark>.
 --
