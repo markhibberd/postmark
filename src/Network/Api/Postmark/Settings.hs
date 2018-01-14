@@ -26,14 +26,24 @@ data PostmarkSettings =
 postmarkTestToken :: PostmarkApiToken
 postmarkTestToken = "POSTMARK_API_TEST"
 
+-- | Postmark settings using the HTTP protocol and the test API token
+-- ('postmarkTestToken').
+--
+-- HTTPS is recommended instead ('postmarkHttpsTest').
 postmarkHttpTest :: PostmarkSettings
 postmarkHttpTest = postmarkHttp postmarkTestToken
 
+-- | Postmark settings using the HTTPS protocol and the test API token
+-- ('postmarkTestToken').
 postmarkHttpsTest :: PostmarkSettings
 postmarkHttpsTest = postmarkHttps postmarkTestToken
 
+-- | Constructs Postmark settings using the HTTP protocol and your API token.
+--
+-- HTTPS is recommended instead ('postmarkHttps').
 postmarkHttp :: PostmarkApiToken -> PostmarkSettings
 postmarkHttp = PostmarkSettings "http://api.postmarkapp.com"
 
+-- | Constructs Postmark settings using the HTTPS protocol and your API token.
 postmarkHttps :: PostmarkApiToken -> PostmarkSettings
 postmarkHttps = PostmarkSettings "https://api.postmarkapp.com"
