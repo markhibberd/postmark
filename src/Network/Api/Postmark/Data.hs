@@ -1,5 +1,19 @@
 {-# LANGUAGE OverloadedStrings, GADTSyntax #-}
-module Network.Api.Postmark.Data where
+module Network.Api.Postmark.Data (
+  Email (..),
+  TrackLinks (..),
+  Attachment (..),
+  EmailWithTemplate (..),
+  defaultEmail,
+  defaultEmailWithTemplate,
+  Sent (..),
+
+  -- * Internal Json tools
+  ojson,
+  oljson,
+  omjson,
+  toText
+) where
 
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text.Lazy as LT

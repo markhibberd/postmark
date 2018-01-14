@@ -1,5 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Network.Api.Postmark.Settings where
+module Network.Api.Postmark.Settings (
+  PostmarkSettings (..),
+  postmarkTestToken,
+  postmarkHttpTest,
+  postmarkHttpsTest,
+  postmarkHttp,
+  postmarkHttps
+) where
 
 import Data.Text
 

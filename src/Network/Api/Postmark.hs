@@ -20,7 +20,32 @@
 --
 -- Issues can be reported at <https://github.com/apiengine/postmark/issues>.
 --
-module Network.Api.Postmark (module X) where
+module Network.Api.Postmark (
+
+  -- * Core
+  email, emails, emailWithTemplate, request,
+
+  -- * Data
+  Email (..), TrackLinks (..), Attachment (..),
+  EmailWithTemplate (..), defaultEmail, defaultEmailWithTemplate,
+  Sent (..),
+
+  -- * Error
+  PostmarkError (..), PostmarkErrorType (..),
+
+  -- * Request
+  PostmarkRequest (..), PostmarkRequest',
+
+  -- * Response
+  PostmarkResponse (..), PostmarkUnexpectedType (..),
+  PostmarkResponse', syntaxErr, formatErr,
+
+  -- * Settings
+  PostmarkSettings (..), postmarkTestToken,
+  postmarkHttpTest, postmarkHttpsTest,
+  postmarkHttp, postmarkHttps
+
+) where
 
 import Network.Api.Postmark.Core as X
 import Network.Api.Postmark.Data as X hiding (ojson, oljson, omjson, toText)

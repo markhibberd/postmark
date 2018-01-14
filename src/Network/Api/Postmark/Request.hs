@@ -1,5 +1,8 @@
 {-# LANGUAGE GADTs, GADTSyntax #-}
-module Network.Api.Postmark.Request where
+module Network.Api.Postmark.Request (
+  PostmarkRequest (..),
+  PostmarkRequest'
+) where
 
 import Network.Api.Postmark.Error
 
