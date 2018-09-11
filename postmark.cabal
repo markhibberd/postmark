@@ -13,14 +13,11 @@ Cabal-Version:      >= 1.8
 Build-Type:         Simple
 Tested-With:        GHC == 7.10.3, GHC == 8.0.2
 Description:
-  postmark
+  Library for postmarkapp.com HTTP Api.
 
 Source-Repository   head
   Type:             git
   Location:         https://github.com/apiengine/postmark.git
-
-Flag                small_base
-  Description:      Choose the new, split-up base package.
 
 Flag demo
     Description:   Build the demo executable.
@@ -62,7 +59,7 @@ executable         postmark-demo
     else
         Buildable: False
 
-    ghc-options:   -Wall -threaded -O2
+    ghc-options:   -Wall -threaded
     main-is:           ../demo/demo.hs
     hs-source-dirs:    demo
     build-depends:     base
