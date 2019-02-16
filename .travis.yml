@@ -99,9 +99,6 @@ script:
   # build & run tests, build benchmarks
   - cabal new-build -w ${HC} ${TEST} ${BENCH} all
 
-  # cabal check
-  - (cd postmark-* && cabal check)
-
   # haddock
   - cabal new-haddock -w ${HC} ${TEST} ${BENCH} all
 
