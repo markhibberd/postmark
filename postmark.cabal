@@ -52,16 +52,15 @@ Library
                     Network.Api.Postmark.Settings
                     Network.Api.Postmark.Tutorial
 
-
 executable         postmark-demo
-    if flag(demo)
-        Buildable: True
-    else
-        Buildable: False
-
-    ghc-options:   -Wall -threaded
+  if flag(demo)
+    Buildable:         True
+    ghc-options:       -Wall -threaded
     main-is:           ../demo/demo.hs
     hs-source-dirs:    demo
     build-depends:     base
                      , postmark
                      , text
+  else
+    Buildable: False
+    main-is:           demo.hs
