@@ -22,6 +22,7 @@ Source-Repository   head
 Flag demo
     Description:   Build the demo executable.
     Default:       False
+    Manual:        True
 
 Library
   Build-Depends:
