@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings, GADTSyntax #-}
 module Network.Api.Postmark.Data (
 
@@ -210,13 +211,17 @@ instance FromJSON Sent where
 
 -- * Internal Json tools
 
-ojson :: ToJSON a => Text -> Maybe a -> Maybe (Text, Value)
+#if ! MIN_VERSION_aeson(2,0,0)
+type Key = Text
+#endif
+
+ojson :: ToJSON a => Key -> Maybe a -> Maybe (Key, Value)
 ojson k = fmap (k .=)
 
-oljson :: ToJSON b => Text -> [a] -> ([a] -> b) -> Maybe (Text, Value)
+oljson :: ToJSON b => Key -> [a] -> ([a] -> b) -> Maybe (Key, Value)
 oljson k vs f = if L.null vs then Nothing else Just (k .= f vs)
 
-omjson :: (ToJSON a) => Text -> Map Text a -> Maybe (Text, Value)
+omjson :: (ToJSON a) => Key -> Map Text a -> Maybe (Key, Value)
 omjson k vs = if M.null vs then Nothing else Just (k .= vs)
 
 toText :: BL.ByteString -> Text
