@@ -61,7 +61,7 @@ executable         postmark-demo
         Buildable: False
 
     ghc-options:   -Wall -threaded
-    main-is:           ../demo/demo.hs
+    main-is:           demo.hs
     hs-source-dirs:    demo
     build-depends:     base
                      , postmark
