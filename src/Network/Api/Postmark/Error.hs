@@ -4,8 +4,8 @@ module Network.Api.Postmark.Error (
   PostmarkErrorType (..)
 ) where
 
-import Data.Aeson
-import Data.Text
+import Data.Aeson (FromJSON (..), Value (..), (.:))
+import Data.Text (Text)
 
 -- * Error types
 
