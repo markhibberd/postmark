@@ -1,6 +1,7 @@
 *~
 *#*
 /dist
+/dist-newstyle
 .hpc
 *.hi
 *.core
